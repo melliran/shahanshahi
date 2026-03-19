@@ -1,0 +1,23 @@
+# Labels must already exist on the repository (see CONTRIBUTING.md).
+# Uses actions/labeler — config is read from the default branch.
+
+documentation:
+  - changed-files:
+      - any-glob-to-any-file:
+          - "**/*.md"
+
+spec:
+  - changed-files:
+      - any-glob-to-any-file:
+          - SPEC.md
+          - data/**
+
+chore:
+  - changed-files:
+      - any-glob-to-any-file:
+          - .github/**
+
+tests:
+  - changed-files:
+      - any-glob-to-any-file:
+          - "**/tests/**"

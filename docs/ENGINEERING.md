@@ -23,7 +23,20 @@ GitHub Actions run on every push and pull request to `main`:
 
 Locally, match CI before opening a PR: `cargo fmt --all`, `cargo clippy --workspace --all-targets -- -D warnings`, `cargo test --workspace`.
 
-**Future hooks (optional, not required today):** `cargo deny`, `cargo semver-checks` after 1.0, MSRV matrix jobs, or `minimal-versions` builds — add them when the API and dependency graph justify the cost.
+**Future hooks (optional, not required today):** `cargo audit` or `cargo deny` (advisories / policy), `cargo semver-checks` after 1.0, MSRV matrix jobs, or `minimal-versions` builds — add them when the API and dependency graph justify the cost.
+
+## Automation (GitHub)
+
+Lightweight automation common in open-source Rust repos:
+
+| Mechanism | File | Purpose |
+|-----------|------|--------|
+| **Dependabot** | [`.github/dependabot.yml`](../.github/dependabot.yml) | Opens PRs to update **Cargo** dependencies (weekly) and **GitHub Actions** pins (monthly, grouped). PRs are tagged with `chore`. |
+| **PR labeler** | [`.github/workflows/labeler.yml`](../.github/workflows/labeler.yml) + [`.github/labeler.yml`](../.github/labeler.yml) | Applies **path-based** labels (`documentation`, `spec`, `chore`, `tests`) so triage and filters stay easy. |
+
+The labeler uses [`pull_request_target`](https://docs.github.com/en/actions/using-workflows/events-that-trigger-workflows#pull_request_target) so it can label PRs from **forks**; the job only adjusts labels (no checkout of untrusted code). The **first** PR that introduces this workflow will not self-label — that is expected.
+
+**Optional later:** issue/stale bots, release automation (e.g. release-plz), `CODEOWNERS` once owners are fixed, or welcome comments for first-time contributors — add when noise vs. value is acceptable for the team.
 
 ## Versioning rules
 
@@ -63,5 +76,6 @@ Pre-release tags (`0.2.0-alpha.1`) are allowed if we need testers before a stabl
 | MSRV | Documented in `Cargo.toml`; bump ⇒ at least minor semver bump. |
 | Tags | `vX.Y.Z` matches crate version at release. |
 | Security | Report vulnerabilities privately per [SECURITY.md](../SECURITY.md), not public issues. |
+| Automation | Dependabot + path-based PR labels; see [Automation (GitHub)](#automation-github). |
 
 Questions belong in GitHub issues (see [issue templates](../.github/ISSUE_TEMPLATE/)) — **except** undisclosed security problems; use [SECURITY.md](../SECURITY.md).
