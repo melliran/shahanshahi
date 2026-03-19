@@ -1,0 +1,14 @@
+---
+description: Git and docs must not credit Cursor or similar tools as co-authors
+alwaysApply: true
+---
+
+# Contributor attribution
+
+- Do **not** add `Co-authored-by:` trailers (or similar) for Cursor, Copilot, or other AI assistants.
+- Do **not** add `Made-with:` / `Made with Cursor` trailers, or any other tool-attribution `git commit --trailer` lines.
+- Do **not** add “Made with Cursor” badges or equivalent tool marketing to README, docs, or commit message bodies.
+
+Human contributors use normal Git author/committer fields only, unless the maintainer explicitly requests otherwise.
+
+When using Cursor’s terminal or agent to run `git commit`, **omit** `--trailer` arguments entirely for this repository.
