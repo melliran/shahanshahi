@@ -18,6 +18,7 @@ chore:
           - .github/**
           - Cargo.lock
           - deny.toml
+          - release-plz.toml
 
 tests:
   - changed-files:

@@ -1,0 +1,12 @@
+# https://release-plz.dev/docs/config
+# Lives next to the workspace root Cargo.toml.
+
+[workspace]
+# Draft PR: maintainers mark “ready for review” after checking version + changelog.
+pr_draft = true
+pr_labels = ["chore"]
+pr_branch_prefix = "release-plz-"
+
+[[package]]
+name = "shahanshahi"
+changelog_path = "CHANGELOG.md"
