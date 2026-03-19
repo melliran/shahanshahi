@@ -25,6 +25,7 @@ Rust library for the **Shahanshahi (Imperial Iranian)** civil calendar — devel
 | `docs/ENGINEERING.md` | How we build, version, and release the library |
 | `CHANGELOG.md` | Release history (Keep a Changelog) |
 | `deny.toml` | `cargo-deny` policy (licenses, advisories, sources) |
+| `release-plz.toml` | Release automation config ([release-plz](https://release-plz.dev/)) |
 | `SECURITY.md` | How to report vulnerabilities privately |
 | `crates/shahanshahi` | Library crate (API to grow with the spec) |
 
