@@ -1,4 +1,4 @@
-name: CI
+name: clippy
 
 on:
   push:
@@ -10,13 +10,11 @@ env:
   CARGO_TERM_COLOR: always
 
 jobs:
-  rust:
+  clippy:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - uses: dtolnay/rust-toolchain@stable
         with:
-          components: rustfmt, clippy
-      - run: cargo fmt --all -- --check
+          components: clippy
       - run: cargo clippy --workspace --all-targets -- -D warnings
-      - run: cargo test --workspace
