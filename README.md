@@ -27,6 +27,10 @@ cargo test -p shahanshahi
 
 [github.com/melliran/shahanshahi](https://github.com/melliran/shahanshahi)
 
+## Roadmap
+
+Tracked on GitHub: **[roadmap index — issue #9](https://github.com/melliran/shahanshahi/issues/9)** and milestone [**v0.1 — spec-backed MVP**](https://github.com/melliran/shahanshahi/milestone/1).
+
 ## Contributing
 
 See [`CONTRIBUTING.md`](./CONTRIBUTING.md).
