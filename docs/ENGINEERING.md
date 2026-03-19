@@ -20,10 +20,13 @@ GitHub Actions run on every push and pull request to `main`:
 | [clippy](../.github/workflows/clippy.yml) | `cargo clippy … -D warnings` — no Clippy warnings. |
 | [test](../.github/workflows/test.yml) | `cargo test --workspace` — tests pass. |
 | [crate package](../.github/workflows/crate-package.yml) | `cargo publish -p shahanshahi --dry-run` — the crate **packages and builds** as crates.io would. |
+| [audit](../.github/workflows/audit.yml) | **`cargo audit`** (RustSec) + **`cargo deny check`** (advisories, licenses, sources) on every PR and weekly on a schedule. |
 
-Locally, match CI before opening a PR: `cargo fmt --all`, `cargo clippy --workspace --all-targets -- -D warnings`, `cargo test --workspace`.
+**`Cargo.lock`** is committed at the workspace root so CI and security scans are **deterministic**. Refresh it when dependencies change (`cargo update` as appropriate).
 
-**Future hooks (optional, not required today):** `cargo audit` or `cargo deny` (advisories / policy), `cargo semver-checks` after 1.0, MSRV matrix jobs, or `minimal-versions` builds — add them when the API and dependency graph justify the cost.
+Locally, match CI before opening a PR: `cargo fmt --all`, `cargo clippy --workspace --all-targets -- -D warnings`, `cargo test --workspace`, and when you touch dependencies or lockfile: `cargo audit` and `cargo deny check` (install via [`cargo-binstall`](https://github.com/cargo-bins/cargo-binstall) or `cargo install`).
+
+**Future hooks (optional):** `cargo semver-checks` after 1.0, MSRV matrix jobs, or `minimal-versions` builds — add when the API graph justifies the cost.
 
 ## Automation (GitHub)
 
@@ -71,7 +74,7 @@ Pre-release tags (`0.2.0-alpha.1`) are allowed if we need testers before a stabl
 | Topic | Rule |
 |-------|------|
 | Spec vs code | Spec + golden dates lead; code implements. |
-| CI | rustfmt, clippy (`-D warnings`), test, packaging dry-run on each PR. |
+| CI | rustfmt, clippy (`-D warnings`), test, packaging dry-run, audit + deny on each PR (and weekly audit schedule). |
 | Version | Root `Cargo.toml` `version`; SemVer; `0.x` allows API evolution with changelog discipline. |
 | MSRV | Documented in `Cargo.toml`; bump ⇒ at least minor semver bump. |
 | Tags | `vX.Y.Z` matches crate version at release. |

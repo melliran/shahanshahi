@@ -16,6 +16,8 @@ chore:
   - changed-files:
       - any-glob-to-any-file:
           - .github/**
+          - Cargo.lock
+          - deny.toml
 
 tests:
   - changed-files:

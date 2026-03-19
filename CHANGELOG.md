@@ -10,6 +10,7 @@ as described in [`docs/ENGINEERING.md`](./docs/ENGINEERING.md).
 
 ### Added
 
+- CI security: `cargo audit` and `cargo deny check` ([`audit` workflow](.github/workflows/audit.yml)), root [`deny.toml`](./deny.toml), and committed [`Cargo.lock`](./Cargo.lock) for deterministic scans.
 - GitHub automation: Dependabot (Cargo + Actions) and path-based PR labeler (see [`docs/ENGINEERING.md`](./docs/ENGINEERING.md)).
 - Security policy and reporting process ([`SECURITY.md`](./SECURITY.md)).
 - Engineering and versioning policy ([`docs/ENGINEERING.md`](./docs/ENGINEERING.md)).

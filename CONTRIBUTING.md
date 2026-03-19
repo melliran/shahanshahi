@@ -16,7 +16,7 @@ Project direction and rationale are summarized in [`docs/VISION.md`](./docs/VISI
 
 1. **Spec first** — Calendar behavior is defined in [`SPEC.md`](./SPEC.md). Propose rule changes there (with citations) before or alongside code.
 2. **Golden dates** — New conversions or edge cases should add rows to [`data/reference-dates.json`](./data/reference-dates.json) with a **primary source** in the `source` field.
-3. **Rust** — `cargo fmt --all`, `cargo clippy --workspace -- -D warnings`, and `cargo test --workspace` should pass before you open a PR.
+3. **Rust** — `cargo fmt --all`, `cargo clippy --workspace -- -D warnings`, and `cargo test --workspace` should pass before you open a PR. If you change **dependencies** or **`Cargo.lock`**, also run `cargo audit` and `cargo deny check` (see [`docs/ENGINEERING.md`](./docs/ENGINEERING.md)).
 
 ## Git workflow (branches, commits, pull requests)
 
