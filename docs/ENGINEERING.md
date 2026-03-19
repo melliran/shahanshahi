@@ -62,5 +62,6 @@ Pre-release tags (`0.2.0-alpha.1`) are allowed if we need testers before a stabl
 | Version | Root `Cargo.toml` `version`; SemVer; `0.x` allows API evolution with changelog discipline. |
 | MSRV | Documented in `Cargo.toml`; bump ⇒ at least minor semver bump. |
 | Tags | `vX.Y.Z` matches crate version at release. |
+| Security | Report vulnerabilities privately per [SECURITY.md](../SECURITY.md), not public issues. |
 
-Questions belong in GitHub issues (see [issue templates](../.github/ISSUE_TEMPLATE/)).
+Questions belong in GitHub issues (see [issue templates](../.github/ISSUE_TEMPLATE/)) — **except** undisclosed security problems; use [SECURITY.md](../SECURITY.md).
