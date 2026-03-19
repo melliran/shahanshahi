@@ -32,11 +32,21 @@ jobs:
       - name: Install Rust toolchain
         uses: dtolnay/rust-toolchain@stable
       - name: Run release-plz release-pr
+        id: release_pr
         uses: release-plz/action@v0.5.128
         with:
           command: release-pr
         env:
           GITHUB_TOKEN: ${{ secrets.RELEASE_PLZ_GITHUB_TOKEN != '' && secrets.RELEASE_PLZ_GITHUB_TOKEN || secrets.GITHUB_TOKEN }}
+
+      - name: If release PR failed — GitHub PR permissions (not crates.io)
+        if: failure() && steps.release_pr.outcome == 'failure'
+        run: |
+          echo "::notice title=Release-plz PR blocked::403 means GitHub will not let this token open pull requests."
+          echo "Adding CARGO_REGISTRY_TOKEN does not fix this."
+          echo "Fix: Repo Settings → Actions → General → Read and write + Allow Actions to create pull requests,"
+          echo "or add secret RELEASE_PLZ_GITHUB_TOKEN (PAT with contents + pull-requests write)."
+          echo "See docs/ENGINEERING.md → Release process."
 
   release-plz-release:
     name: Publish (crates.io + GitHub Release)

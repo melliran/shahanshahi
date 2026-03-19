@@ -62,6 +62,8 @@ We follow **[Semantic Versioning 2.0.0](https://semver.org/)** as interpreted by
 
 We use **[release-plz](https://release-plz.dev/)** so versioning and changelog updates are **proposed as a PR** and **publishing** is a separate, **gated** step.
 
+> **Important:** If the workflow fails with **`GitHub Actions is not permitted to create or approve pull requests`**, that is a **GitHub** permission problem, **not** crates.io. Adding **`CARGO_REGISTRY_TOKEN`** does **not** fix it. You must either allow Actions to open PRs (step 1 below) or set **`RELEASE_PLZ_GITHUB_TOKEN`** (step “Fix B” under [HTTP 403](#if-you-still-get-http-403-when-opening-the-release-pr)).
+
 ### One-time GitHub setup
 
 1. **Let Actions open PRs (required for `release-plz-pr`):**  
@@ -71,7 +73,7 @@ We use **[release-plz](https://release-plz.dev/)** so versioning and changelog u
    Official docs: [Allowing GitHub Actions to create or approve pull requests](https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/enabling-features-for-your-repository/managing-github-actions-settings-for-a-repository#allowing-github-actions-to-create-or-approve-pull-requests).  
    If this option is **missing or disabled**, your **organization** may forbid it — an org owner must change [organization Actions policies](https://docs.github.com/en/organizations/managing-organization-settings/disabling-or-limiting-github-actions-for-your-organization#preventing-github-actions-from-creating-or-approving-pull-requests), or use the PAT workaround below.
 
-2. **Secrets:** add **`CARGO_REGISTRY_TOKEN`** ([crates.io token](https://doc.rust-lang.org/cargo/reference/publishing.html#before-your-first-publish) with scopes `publish-new` and `publish-update`). The publish job reads it only when enabled below.
+2. **Secrets (crates.io only):** add **`CARGO_REGISTRY_TOKEN`** ([crates.io token](https://doc.rust-lang.org/cargo/reference/publishing.html#before-your-first-publish) with scopes `publish-new` and `publish-update`). Used **only** by the **`release-plz-release`** publish job when `RELEASE_PLZ_PUBLISH=true`. It does **not** affect opening release PRs.
 
 3. **Variables:** add repository variable **`RELEASE_PLZ_PUBLISH`** = `true` only when you want CI to run **`release-plz release`** (crates.io + GitHub Release). Leave unset or not `true` to **skip publishing** while still opening release PRs.
 
