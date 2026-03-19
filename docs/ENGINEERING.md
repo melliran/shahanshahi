@@ -64,9 +64,24 @@ We use **[release-plz](https://release-plz.dev/)** so versioning and changelog u
 
 ### One-time GitHub setup
 
-1. **Actions → General → Workflow permissions:** allow **read and write** and “Allow GitHub Actions to create and approve pull requests” (see [release-plz quickstart](https://release-plz.dev/docs/github/quickstart)).
+1. **Let Actions open PRs (required for `release-plz-pr`):**  
+   **Settings → Actions → General → Workflow permissions**
+   - Set **Workflow permissions** to **Read and write permissions** (not “Read repository contents”).
+   - Turn **on** **Allow GitHub Actions to create and approve pull requests**.  
+   Official docs: [Allowing GitHub Actions to create or approve pull requests](https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/enabling-features-for-your-repository/managing-github-actions-settings-for-a-repository#allowing-github-actions-to-create-or-approve-pull-requests).  
+   If this option is **missing or disabled**, your **organization** may forbid it — an org owner must change [organization Actions policies](https://docs.github.com/en/organizations/managing-organization-settings/disabling-or-limiting-github-actions-for-your-organization#preventing-github-actions-from-creating-or-approving-pull-requests), or use the PAT workaround below.
+
 2. **Secrets:** add **`CARGO_REGISTRY_TOKEN`** ([crates.io token](https://doc.rust-lang.org/cargo/reference/publishing.html#before-your-first-publish) with scopes `publish-new` and `publish-update`). The publish job reads it only when enabled below.
+
 3. **Variables:** add repository variable **`RELEASE_PLZ_PUBLISH`** = `true` only when you want CI to run **`release-plz release`** (crates.io + GitHub Release). Leave unset or not `true` to **skip publishing** while still opening release PRs.
+
+#### If you still get HTTP 403 when opening the release PR
+
+Error from GitHub’s API often looks like:  
+`"message": "GitHub Actions is not permitted to create or approve pull requests."`
+
+- **Fix A:** Confirm step (1): both **read/write** workflow permissions **and** the **create/approve pull requests** toggle (repo or org).
+- **Fix B (PAT):** Create a **fine-grained personal access token** (or classic PAT) for a bot/user account with **Contents** and **Pull requests** write access to this repo. Add it as repository secret **`RELEASE_PLZ_GITHUB_TOKEN`**. The workflow uses it **instead of** `GITHUB_TOKEN` when this secret is non-empty ([release-plz token docs](https://release-plz.dev/docs/github/token)).
 
 ### Day-to-day flow
 
