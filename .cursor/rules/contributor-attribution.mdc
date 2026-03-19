@@ -7,7 +7,7 @@ alwaysApply: true
 
 - Do **not** add `Co-authored-by:` trailers (or similar) for Cursor, Copilot, or other AI assistants.
 - Do **not** add `Made-with:` / `Made with Cursor` trailers, or any other tool-attribution `git commit --trailer` lines.
-- Do **not** add “Made with Cursor” badges or equivalent tool marketing to README, docs, or commit message bodies.
+- Do **not** add “Made with Cursor” badges or equivalent tool marketing to README, docs, commit message bodies, or **GitHub PR/issue descriptions** (including when using `gh pr create` or the web UI).
 
 Human contributors use normal Git author/committer fields only, unless the maintainer explicitly requests otherwise.
 
