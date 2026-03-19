@@ -23,6 +23,7 @@ Rust library for the **Shahanshahi (Imperial Iranian)** civil calendar — devel
 | `data/reference-dates.json` | Vetted Y/M/D pairs + citations for tests |
 | `docs/ENGINEERING.md` | How we build, version, and release the library |
 | `CHANGELOG.md` | Release history (Keep a Changelog) |
+| `SECURITY.md` | How to report vulnerabilities privately |
 | `crates/shahanshahi` | Library crate (API to grow with the spec) |
 
 ## Building
@@ -45,6 +46,10 @@ Tracked on GitHub: **[roadmap index — issue #9](https://github.com/melliran/sh
 ## Contributing
 
 See [`CONTRIBUTING.md`](./CONTRIBUTING.md).
+
+## Security
+
+To report a **security vulnerability**, use [GitHub Security](https://github.com/melliran/shahanshahi/security) — **do not** file a public issue. Details: [`SECURITY.md`](./SECURITY.md).
 
 ## License
 

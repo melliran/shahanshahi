@@ -12,7 +12,7 @@ This project does **not** use automated-tool attribution in Git history:
 
 **Cursor users:** disable Agent commit attribution so commits stay clean — **Cursor Settings → Agent → Attribution** (turn off tool trailers / co-author injection for this project or globally, per your preference).
 
-Project direction and rationale are summarized in [`docs/VISION.md`](./docs/VISION.md). Engineering policy, CI meaning, and semver rules are in [`docs/ENGINEERING.md`](./docs/ENGINEERING.md).
+Project direction and rationale are summarized in [`docs/VISION.md`](./docs/VISION.md). Engineering policy, CI meaning, and semver rules are in [`docs/ENGINEERING.md`](./docs/ENGINEERING.md). **Security vulnerabilities** are reported privately per [`SECURITY.md`](./SECURITY.md) (not via public issues).
 
 1. **Spec first** — Calendar behavior is defined in [`SPEC.md`](./SPEC.md). Propose rule changes there (with citations) before or alongside code.
 2. **Golden dates** — New conversions or edge cases should add rows to [`data/reference-dates.json`](./data/reference-dates.json) with a **primary source** in the `source` field.

@@ -10,5 +10,6 @@ as described in [`docs/ENGINEERING.md`](./docs/ENGINEERING.md).
 
 ### Added
 
+- Security policy and reporting process ([`SECURITY.md`](./SECURITY.md)).
 - Engineering and versioning policy ([`docs/ENGINEERING.md`](./docs/ENGINEERING.md)).
 - Split CI into `rustfmt`, `clippy`, `test`, and `crate package` (publish dry-run) workflows.

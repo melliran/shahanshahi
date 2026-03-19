@@ -1,1 +1,6 @@
 blank_issues_enabled: true
+
+contact_links:
+  - name: Report a security vulnerability
+    url: https://github.com/melliran/shahanshahi/security
+    about: Use GitHub private security reporting. Do not open a public issue for undisclosed vulnerabilities — see SECURITY.md.
