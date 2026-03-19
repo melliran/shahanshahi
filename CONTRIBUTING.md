@@ -18,4 +18,42 @@ Project direction and rationale are summarized in [`docs/VISION.md`](./docs/VISI
 2. **Golden dates** — New conversions or edge cases should add rows to [`data/reference-dates.json`](./data/reference-dates.json) with a **primary source** in the `source` field.
 3. **Rust** — `cargo fmt --all`, `cargo clippy --workspace -- -D warnings`, and `cargo test --workspace` should pass before you open a PR.
 
+## Git workflow (branches, commits, pull requests)
+
+Agreeing on this *before* milestone work scales cleanly: everyone reads the same playbook, history stays searchable, and reviews stay small.
+
+### Branches
+
+- Branch off **`main`** (or the current integration branch your team uses).
+- Use short, lowercase slugs with a **type prefix**:
+  - `feat/` — new behavior or public API
+  - `fix/` — bug fixes
+  - `docs/` — documentation only
+  - `chore/` — tooling, CI, refactors with no user-visible change
+  - `test/` — tests and fixtures only
+- Examples: `feat/jdn-conversion`, `docs/spec-cross-links`, `fix/leap-year-boundary`.
+
+Avoid long-lived personal branches; rebase or merge `main` regularly so PRs do not rot.
+
+### Commits
+
+- **One logical change per commit** when practical; squash on merge is fine if the PR narrative is clear.
+- **Subject line:** imperative mood, ~72 characters, no trailing period. Optional **Conventional Commits** prefix for consistency:
+  - `feat:`, `fix:`, `docs:`, `chore:`, `test:`, `refactor:`
+- **Body:** use when context is not obvious — *what* changed and *why* (not how line-by-line). Link issues with `Fixes #123` or `See #123` when relevant.
+- Do **not** add tooling attribution trailers; see [Attribution](#attribution) above.
+
+### Pull requests
+
+- **Title:** same spirit as the commit subject — scannable and specific.
+- **Description** should answer:
+  - **What** does this PR do?
+  - **Why** (milestone goal, spec section, issue link)?
+  - **How to verify** (commands run, notable edge cases)?
+- **Link tracking:** reference the GitHub issue and/or milestone (e.g. v0.1 — spec-backed MVP) in the PR description so work stays tied to the roadmap.
+- **Scope:** prefer smaller PRs over “everything” dumps; stack follow-ups if needed.
+- **Before requesting review:** `cargo fmt --all`, `cargo clippy --workspace -- -D warnings`, `cargo test --workspace` pass locally (or explain CI-only exceptions in the PR).
+
+Maintainers may squash-merge to keep `main` linear; use the PR title/description as the merge commit message when helpful.
+
 Questions or historical sources are welcome in issues.
