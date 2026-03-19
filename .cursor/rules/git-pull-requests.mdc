@@ -1,0 +1,12 @@
+---
+description: Land changes via branches and pull requests, not direct commits to main
+alwaysApply: true
+---
+
+# Git: branches and pull requests
+
+- **Do not commit directly to `main`** for routine project work. Create a **branch** from current `main`, commit there, **push**, open a **pull request**, then merge (squash or merge per maintainer preference).
+- Align branch names with [`CONTRIBUTING.md`](../../CONTRIBUTING.md) (`feat/`, `fix/`, `docs/`, `chore/`, …).
+- When using `gh pr create`, pass the description with **`--body-file`** (or a here-doc) so no tool-marketing footer is appended; see [`contributor-attribution.mdc`](./contributor-attribution.mdc).
+
+Trivial exceptions (only if the maintainer explicitly asks): revert hotfixes or one-line meta edits — default is still **PR-first**.
