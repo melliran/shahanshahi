@@ -58,4 +58,16 @@ Maintainers may squash-merge to keep `main` linear; use the PR title/description
 
 **Templates:** New PRs and choosable issue types use [`.github/pull_request_template.md`](./.github/pull_request_template.md) and [`.github/ISSUE_TEMPLATE/`](./.github/ISSUE_TEMPLATE/). Replace the HTML comments with real content before submitting; do not leave tool-marketing footers in the description.
 
+## Labels
+
+Pick **one primary type** where it fits, then add narrow tags (e.g. `spec` + `tests`) as needed. Default GitHub labels (`bug`, `enhancement`, `documentation`, `question`, `good first issue`, `help wanted`, `duplicate`, `invalid`, `wontfix`) stay available for triage.
+
+| Label | Use when |
+|-------|----------|
+| `spec` | Rules in `SPEC.md`, primary sources, or rows in `data/reference-dates.json` |
+| `tests` | Test suite, fixtures, or golden-date coverage |
+| `chore` | Tooling, CI, or repo maintenance without user-visible calendar behavior |
+| `performance` | Speed, allocations, or binary-size work |
+| `blocked` | Waiting on an external decision, spec clarity, or another dependency |
+
 Questions or historical sources are welcome in issues.
