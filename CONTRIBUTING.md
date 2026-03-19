@@ -8,7 +8,7 @@ This project does **not** use automated-tool attribution in Git history:
 
 - Do **not** add `Co-authored-by:` trailers for Cursor, Copilot, or similar tools.
 - Do **not** add `Made-with:` (or “Made with Cursor”) **commit trailers** or equivalent `git commit --trailer …` lines for tooling.
-- Do **not** add “Made with Cursor” (or equivalent) branding to README or documentation.
+- Do **not** add “Made with Cursor” (or equivalent) branding to README, documentation, **or GitHub PR/issue descriptions** (including footers injected by an editor or agent).
 
 **Cursor users:** disable Agent commit attribution so commits stay clean — **Cursor Settings → Agent → Attribution** (turn off tool trailers / co-author injection for this project or globally, per your preference).
 
@@ -55,5 +55,7 @@ Avoid long-lived personal branches; rebase or merge `main` regularly so PRs do n
 - **Before requesting review:** `cargo fmt --all`, `cargo clippy --workspace -- -D warnings`, `cargo test --workspace` pass locally (or explain CI-only exceptions in the PR).
 
 Maintainers may squash-merge to keep `main` linear; use the PR title/description as the merge commit message when helpful.
+
+**Templates:** New PRs and choosable issue types use [`.github/pull_request_template.md`](./.github/pull_request_template.md) and [`.github/ISSUE_TEMPLATE/`](./.github/ISSUE_TEMPLATE/). Replace the HTML comments with real content before submitting; do not leave tool-marketing footers in the description.
 
 Questions or historical sources are welcome in issues.
