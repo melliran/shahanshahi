@@ -15,6 +15,7 @@
 - [ ] `cargo fmt --all`
 - [ ] `cargo clippy --workspace -- -D warnings`
 - [ ] `cargo test --workspace`
+- [ ] If this PR changes **dependencies** or **`Cargo.lock`**: `cargo audit` and `cargo deny check`
 
 <!-- Documentation-only PRs: check the items that apply and note N/A for the rest. -->
 
