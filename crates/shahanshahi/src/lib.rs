@@ -8,4 +8,4 @@
 #![forbid(unsafe_code)]
 
 /// Tracks which written specification version this build targets.
-pub const SPEC_VERSION: &str = "1";
+pub const SPEC_VERSION: &str = "2";
