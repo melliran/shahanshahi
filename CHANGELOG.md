@@ -8,11 +8,15 @@ as described in [`docs/ENGINEERING.md`](./docs/ENGINEERING.md).
 
 ## [Unreleased]
 
+## [0.0.0] - 2026-03-19
+
 ### Added
 
-- Release automation: [release-plz](https://release-plz.dev/) workflow (draft release PRs; optional gated publish via repo variable `RELEASE_PLZ_PUBLISH`) and [`release-plz.toml`](./release-plz.toml); optional secret `RELEASE_PLZ_GITHUB_TOKEN` if the repo cannot allow Actions to open PRs.
-- CI security: `cargo audit` and `cargo deny check` ([`audit` workflow](.github/workflows/audit.yml)), root [`deny.toml`](./deny.toml), and committed [`Cargo.lock`](./Cargo.lock) for deterministic scans.
-- GitHub automation: Dependabot (Cargo + Actions) and path-based PR labeler (see [`docs/ENGINEERING.md`](./docs/ENGINEERING.md)).
-- Security policy and reporting process ([`SECURITY.md`](./SECURITY.md)).
-- Engineering and versioning policy ([`docs/ENGINEERING.md`](./docs/ENGINEERING.md)).
-- Split CI into `rustfmt`, `clippy`, `test`, and `crate package` (publish dry-run) workflows.
+- Cargo workspace and `shahanshahi` library skeleton
+- README, [`CONTRIBUTING.md`](./CONTRIBUTING.md), and [`docs/VISION.md`](./docs/VISION.md); README links to roadmap issue and v0.1 milestone
+- [`docs/ENGINEERING.md`](./docs/ENGINEERING.md) — build, versioning, CI, releases, and automation
+- [`SECURITY.md`](./SECURITY.md) and GitHub issue / PR templates
+- CI: `rustfmt`, `clippy`, `test`, and `crate package` workflows; README badges
+- `cargo audit` and `cargo deny` ([`deny.toml`](./deny.toml)); committed [`Cargo.lock`](./Cargo.lock) for deterministic scans
+- Dependabot (Cargo + Actions) and path-based PR labeler ([`.github/labeler.yml`](./.github/labeler.yml))
+- [`release-plz.toml`](./release-plz.toml) and release-plz workflow (draft release PRs; gated publish via `RELEASE_PLZ_PUBLISH`; optional `RELEASE_PLZ_GITHUB_TOKEN`)
