@@ -8,6 +8,11 @@ as described in [`docs/ENGINEERING.md`](./docs/ENGINEERING.md).
 
 ## [Unreleased]
 
+### Changed
+
+- [`SPEC.md`](./SPEC.md) — **spec version 1**: primary reference table, epoch (+1180), twelve months, leap rule, era of applicability, proleptic policy, known gaps ([issue #1](https://github.com/melliran/shahanshahi/issues/1))
+- [`SPEC_VERSION`](./crates/shahanshahi/src/lib.rs) and [`data/reference-dates.json`](./data/reference-dates.json) `spec_id` set to **`1`**
+
 ## [0.0.0] - 2026-03-19
 
 ### Added
