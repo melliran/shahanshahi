@@ -34,6 +34,9 @@ mod tests {
     #[test]
     fn offset_maps_shahanshahi_to_hijri_year() {
         assert_eq!(shahanshahi_to_hijri_shamsi_year(2535), 1355);
-        assert_eq!(is_shahanshahi_leap_arithmetic(2534), is_solar_hijri_leap_arithmetic(1354));
+        assert_eq!(
+            is_shahanshahi_leap_arithmetic(2534),
+            is_solar_hijri_leap_arithmetic(1354)
+        );
     }
 }
