@@ -10,8 +10,7 @@ as described in [`docs/ENGINEERING.md`](./docs/ENGINEERING.md).
 
 ### Changed
 
-- [`SPEC.md`](./SPEC.md) — **spec version 1**: primary reference table, epoch (+1180), twelve months, leap rule, era of applicability, proleptic policy, known gaps ([issue #1](https://github.com/melliran/shahanshahi/issues/1))
-- [`SPEC_VERSION`](./crates/shahanshahi/src/lib.rs) and [`data/reference-dates.json`](./data/reference-dates.json) `spec_id` set to **`1`**
+- [`SPEC.md`](./SPEC.md) — **spec version 2**: astronomical references (Heydari‑Malayeri, Akrami, Wikipedia *Equinox*), operational Nowruz model, **Mode A** (33‑year arithmetic + Rust) and **Mode B** (JPL ephemeris + illustrative Rust); [`SPEC_VERSION`](./crates/shahanshahi/src/lib.rs) and [`data/reference-dates.json`](./data/reference-dates.json) `spec_id` → **`2`**
 
 ## [0.0.0] - 2026-03-19
 
