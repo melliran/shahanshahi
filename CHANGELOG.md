@@ -8,6 +8,11 @@ as described in [`docs/ENGINEERING.md`](./docs/ENGINEERING.md).
 
 ## [Unreleased]
 
+### Added
+
+- [`data/reference-dates.json`](./data/reference-dates.json) — golden Shahanshahi ↔ Gregorian rows with **Wikipedia *Solar Hijri calendar*** comparison table + **IAS 1925 law** transcription + derived month-grid dates ([issue #2](https://github.com/melliran/shahanshahi/issues/2))
+- [`crates/shahanshahi/tests/reference_dates.rs`](./crates/shahanshahi/tests/reference_dates.rs) — loads corpus, checks `spec_id` vs [`SPEC_VERSION`](./crates/shahanshahi/src/lib.rs)
+
 ### Changed
 
 - [`SPEC.md`](./SPEC.md) — **spec version 2**: astronomical references (Heydari‑Malayeri, Akrami, Wikipedia *Equinox*), operational Nowruz model, **Mode A** (33‑year arithmetic + Rust) and **Mode B** (JPL ephemeris + illustrative Rust); [`SPEC_VERSION`](./crates/shahanshahi/src/lib.rs) and [`data/reference-dates.json`](./data/reference-dates.json) `spec_id` → **`2`**

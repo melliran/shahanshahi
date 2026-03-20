@@ -1,5 +1,72 @@
 {
   "schema_version": 1,
   "spec_id": "2",
-  "rows": []
+  "rows": [
+    {
+      "shahanshahi": { "year": 2535, "month": 1, "day": 1 },
+      "gregorian": { "year": 1976, "month": 3, "day": 21 },
+      "source": "Wikipedia contributors, \"Solar Hijri calendar\", section \"Comparison with Gregorian calendar\" (SH 1355: 21 March 1976 – 20 March 1977). https://en.wikipedia.org/wiki/Solar_Hijri_calendar (accessed 2026-03-20). Aligns with PSRI / institutional mapping 1 Farvardin 1355 SH = 1 Farvardin 2535 Shahanshahi in SPEC.md § Epoch.",
+      "notes": "Era start anchor."
+    },
+    {
+      "shahanshahi": { "year": 2536, "month": 1, "day": 1 },
+      "gregorian": { "year": 1977, "month": 3, "day": 21 },
+      "source": "Wikipedia contributors, \"Solar Hijri calendar\", section \"Comparison with Gregorian calendar\" (SH 1356: 21 March 1977 – 20 March 1978). https://en.wikipedia.org/wiki/Solar_Hijri_calendar (accessed 2026-03-20).",
+      "notes": "Ordinary Solar Hijri year within Shahanshahi era."
+    },
+    {
+      "shahanshahi": { "year": 2537, "month": 1, "day": 1 },
+      "gregorian": { "year": 1978, "month": 3, "day": 21 },
+      "source": "Wikipedia contributors, \"Solar Hijri calendar\", section \"Comparison with Gregorian calendar\" (SH 1357: 21 March 1978 – 20 March 1979). https://en.wikipedia.org/wiki/Solar_Hijri_calendar (accessed 2026-03-20).",
+      "notes": "Last full Solar Hijri year overlapping Shahanshahi civil era."
+    },
+    {
+      "shahanshahi": { "year": 2535, "month": 12, "day": 29 },
+      "gregorian": { "year": 1977, "month": 3, "day": 20 },
+      "source": "Wikipedia contributors, \"Solar Hijri calendar\", section \"Comparison with Gregorian calendar\" (SH 1355 common year, ends 20 March 1977). https://en.wikipedia.org/wiki/Solar_Hijri_calendar (accessed 2026-03-20). Esfand length 29 days per 1925 law as transcribed by Iranian Astronomical Society: https://www.asi.ir/fa/news/13025/%DB%8C%DA%A8%D8%B5%D8%AF%D9%85%DB%8C%D9%86-%D8%B3%D8%A7%D9%84-%D8%AA%D8%B5%D9%88%DB%8C%D8%A8-%D8%AA%D9%82%D9%88%DB%8C%D9%85-%D8%AF%D8%B1-%D8%A7%DB%8C%D8%B1%D8%A7%D9%86",
+      "notes": "Last civil day before 1 Farvardin 2536; ordinary-year Esfand boundary."
+    },
+    {
+      "shahanshahi": { "year": 2536, "month": 12, "day": 29 },
+      "gregorian": { "year": 1978, "month": 3, "day": 20 },
+      "source": "Wikipedia contributors, \"Solar Hijri calendar\", section \"Comparison with Gregorian calendar\" (SH 1356 common year, ends 20 March 1978). https://en.wikipedia.org/wiki/Solar_Hijri_calendar (accessed 2026-03-20). Esfand 29 days per 1925 law (IAS transcription URL as row above).",
+      "notes": "Day before 1 Farvardin 2537."
+    },
+    {
+      "shahanshahi": { "year": 2534, "month": 12, "day": 30 },
+      "gregorian": { "year": 1976, "month": 3, "day": 20 },
+      "source": "Wikipedia contributors, \"Solar Hijri calendar\", section \"Comparison with Gregorian calendar\" (SH 1354* leap: 21 March 1975 – 20 March 1976). https://en.wikipedia.org/wiki/Solar_Hijri_calendar (accessed 2026-03-20). Leap / 30 Esfand consistent with Heydari-Malayeri mod-33 rule (arXiv:astro-ph/0409620) as summarized in SPEC.md § Mode A.",
+      "notes": "Proleptic Shahanshahi year 2534 (= 1354 SH); leap Esfand 30 immediately before 1 Farvardin 2535."
+    },
+    {
+      "shahanshahi": { "year": 2535, "month": 4, "day": 31 },
+      "gregorian": { "year": 1976, "month": 7, "day": 22 },
+      "source": "Derived: 31-day months Farvardin–Tir per 1925 law (IAS transcription, URL in row shahanshahi 2535-12-29). Civil count from 1 Farvardin 1355 SH = 1976-03-21 per Wikipedia Solar Hijri comparison table (accessed 2026-03-20).",
+      "notes": "Month-length boundary: last day of Tir (month 4)."
+    },
+    {
+      "shahanshahi": { "year": 2535, "month": 7, "day": 1 },
+      "gregorian": { "year": 1976, "month": 9, "day": 23 },
+      "source": "Derived: same month grid and anchor as row shahanshahi 2535-04-31 (IAS + Wikipedia).",
+      "notes": "First day of Mehr (month 7) after 31-day Shahrivar."
+    },
+    {
+      "shahanshahi": { "year": 2537, "month": 6, "day": 10 },
+      "gregorian": { "year": 1978, "month": 9, "day": 1 },
+      "source": "Derived: civil arithmetic from 1 Farvardin 1357 SH = 1978-03-21 (Wikipedia Solar Hijri comparison table) with 1925 month lengths (IAS transcription).",
+      "notes": "Illustrative mid-era boundary; SPEC documents ambiguity for last Shahanshahi-labelled civil day vs repeal date."
+    },
+    {
+      "shahanshahi": { "year": 2555, "month": 1, "day": 1 },
+      "gregorian": { "year": 1996, "month": 3, "day": 20 },
+      "source": "Wikipedia contributors, \"Solar Hijri calendar\", section \"Comparison with Gregorian calendar\" (SH 1375* leap: 20 March 1996 – 20 March 1997). https://en.wikipedia.org/wiki/Solar_Hijri_calendar (accessed 2026-03-20). Shahanshahi year = 1375 + 1180 = 2555 (proleptic labelling).",
+      "notes": "Leap-year Nowruz on Gregorian 20 March; proleptic Shahanshahi outside legal Pahlavi era."
+    },
+    {
+      "shahanshahi": { "year": 2554, "month": 12, "day": 30 },
+      "gregorian": { "year": 1996, "month": 3, "day": 19 },
+      "source": "Wikipedia contributors, \"Solar Hijri calendar\", section \"Comparison with Gregorian calendar\" (SH 1374 ends 19 March 1996; 1375* leap follows). https://en.wikipedia.org/wiki/Solar_Hijri_calendar (accessed 2026-03-20). 30 Esfand in leap year 1374 SH per 1925 law + table.",
+      "notes": "Leap Esfand day before 1 Farvardin 2555; proleptic."
+    }
+  ]
 }
