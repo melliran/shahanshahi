@@ -109,7 +109,7 @@ Month **names** are **in scope** for this spec: they are **fixed by law** (1925)
 
 **Normative consequence for Shahanshahi:** During the Shahanshahi era, **leap years are exactly those Solar Hijri leap years** for the same solar year (same Esfand length as under pre-1976 civil practice).
 
-**Worked examples (pending table verification):** Calendar literature commonly treats **1355 H.Sh. (2535 Shahanshahi)** as **leap** and **1356 H.Sh. (2536 Shahanshahi)** as **common**. **Golden tests** must not rely on those years until a row in [`data/reference-dates.json`](data/reference-dates.json) cites an inspected primary table.
+**Leap status in the Shahanshahi legal window (Mode A + public tables):** Under the **mod‑33** rule in [§ Implementation modes](#implementation-modes-informative-defaults-for-this-repository), **1354 H.Sh.** is **leap** and **1355–1357 H.Sh.** are **common** (residues **1** vs **2–4** mod 33). The English Wikipedia **Solar Hijri calendar** comparison table likewise marks **1354\*** as leap and **1355–1357** without a leap mark — see [`data/reference-dates.json`](data/reference-dates.json) rows citing that table.
 
 ---
 
