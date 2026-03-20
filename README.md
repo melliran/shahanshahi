@@ -14,7 +14,7 @@ Rust library for the **Shahanshahi (Imperial Iranian)** civil calendar — devel
 
 **How we build and version:** see [`docs/ENGINEERING.md`](./docs/ENGINEERING.md). Badges above map to CI: **rustfmt** (format), **clippy** (lint), **test**, **crate package** (`cargo publish --dry-run` — release-ready packaging, not a deployed server), **audit** (`cargo audit` + `cargo deny`).
 
-**Status: pre-implementation.** The crate publishes a workspace skeleton only. Arithmetic and conversions ship after [`SPEC.md`](./SPEC.md) and golden dates in [`data/reference-dates.json`](./data/reference-dates.json) are filled from primary sources.
+**Status: pre-implementation.** [`SPEC.md`](./SPEC.md) is at **version 1** (sourced rules and citations; some Gazette/yearbook pins still open — see *Known gaps* there). Arithmetic and conversions ship after golden rows in [`data/reference-dates.json`](./data/reference-dates.json) are filled from traceable tables.
 
 ## Repository layout
 

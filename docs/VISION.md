@@ -19,9 +19,9 @@ Only after those are anchored does it make sense to grow the Rust API, `chrono`/
 
 | Piece | Role |
 |--------|------|
-| [`SPEC.md`](../SPEC.md) | Draft contract for implementers and issue discussions |
-| [`data/`](../data/) | Schema + (eventually) vetted reference rows for tests |
-| [`crates/shahanshahi/`](../crates/shahanshahi/) | Library crate; `SPEC_VERSION = "0-unstable"` until the spec is sourced |
+| [`SPEC.md`](../SPEC.md) | Versioned calendar contract for implementers (`SPEC_VERSION = "1"`) |
+| [`data/`](../data/) | Schema + vetted reference rows for tests (rows still to be populated) |
+| [`crates/shahanshahi/`](../crates/shahanshahi/) | Library crate; `SPEC_VERSION` tracks [`SPEC.md`](../SPEC.md) |
 | [`.github/workflows/ci.yml`](../.github/workflows/ci.yml) | `fmt`, `clippy`, `test` on `main` and PRs |
 
 **Status:** pre-implementation skeleton—intentionally **spec-first**.
