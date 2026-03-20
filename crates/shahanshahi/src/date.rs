@@ -1,0 +1,254 @@
+//! Civil Shahanshahi date (year, month, day) with validation per [`SPEC.md`](https://github.com/melliran/shahanshahi/blob/main/SPEC.md).
+
+use crate::is_shahanshahi_leap_arithmetic;
+use core::fmt;
+
+/// First civil day of the default **legal Shahanshahi era** (inclusive), per SPEC.md § Era of applicability.
+pub const LEGAL_ERA_START_YEAR: i32 = 2535;
+pub const LEGAL_ERA_START_MONTH: u8 = 1;
+pub const LEGAL_ERA_START_DAY: u8 = 1;
+
+/// Conservative inclusive **last** civil day in this crate’s default policy: **10 Shahrivar 2537**, as cited in
+/// SPEC.md until the repealing instrument pins the exact last Shahanshahi-labelled day.
+pub const LEGAL_ERA_END_YEAR: i32 = 2537;
+pub const LEGAL_ERA_END_MONTH: u8 = 6;
+pub const LEGAL_ERA_END_DAY: u8 = 10;
+
+/// A valid civil date in the Shahanshahi (Imperial Iranian) calendar: **1 = Farvardin … 12 = Esfand**,
+/// with month lengths from the 1925 solar civil law (SPEC.md § Months). Leap **Esfand** uses **Mode A**
+/// (33-year arithmetic) on the underlying Hijri Shamsi year `Y_H = Y_S − 1180`.
+///
+/// # Legal era (default constructor)
+///
+/// [`ShahanshahiDate::try_new`] accepts only dates in the **inclusive** window
+/// [`LEGAL_ERA_START_YEAR`]/[`LEGAL_ERA_START_MONTH`]/[`LEGAL_ERA_START_DAY`]
+/// through [`LEGAL_ERA_END_YEAR`]/[`LEGAL_ERA_END_MONTH`]/[`LEGAL_ERA_END_DAY`], matching SPEC.md’s
+/// default crate policy (reject civil dates outside the documented Pahlavi Shahanshahi numbering window).
+///
+/// # Errors
+///
+/// Invalid month, impossible day-of-month, or (for `try_new`) a calendar-valid date outside that window
+/// yield [`ShahanshahiDateError`].
+///
+/// # Proleptic labelling
+///
+/// With the **`proleptic`** Cargo feature, [`ShahanshahiDate::try_new_proleptic`] validates the same
+/// month grid and leap rule but **does not** enforce the legal era. Such dates are not historically
+/// authorized as civil Shahanshahi outside the era (SPEC.md § Proleptic use).
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, PartialOrd, Ord)]
+pub struct ShahanshahiDate {
+    year: i32,
+    month: u8,
+    day: u8,
+}
+
+/// Why a [`ShahanshahiDate`] could not be constructed.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub enum ShahanshahiDateError {
+    /// `month` is not in `1..=12`.
+    MonthOutOfRange { month: u8 },
+    /// `day` is not valid for this year and month (after leap resolution for Esfand).
+    DayOutOfRange {
+        year: i32,
+        month: u8,
+        day: u8,
+        max_day: u8,
+    },
+    /// Calendar-valid date outside the default legal era ([`ShahanshahiDate::try_new`] only).
+    OutOfLegalEra { year: i32, month: u8, day: u8 },
+}
+
+impl fmt::Display for ShahanshahiDateError {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        match self {
+            Self::MonthOutOfRange { month } => {
+                write!(f, "month {month} is not in the range 1..=12 (Farvardin..=Esfand)")
+            }
+            Self::DayOutOfRange {
+                year,
+                month,
+                day,
+                max_day,
+            } => write!(
+                f,
+                "day {day} is invalid for Shahanshahi {year}-{month:02} (max day {max_day})",
+            ),
+            Self::OutOfLegalEra {
+                year,
+                month,
+                day,
+            } => write!(
+                f,
+                "date {year}-{month:02}-{day:02} is outside the default legal Shahanshahi civil era \
+                 (inclusive {sy}-{sm:02}-{sd:02} ..= {ey}-{em:02}-{ed:02}; see SPEC.md and crate docs)",
+                sy = LEGAL_ERA_START_YEAR,
+                sm = LEGAL_ERA_START_MONTH,
+                sd = LEGAL_ERA_START_DAY,
+                ey = LEGAL_ERA_END_YEAR,
+                em = LEGAL_ERA_END_MONTH,
+                ed = LEGAL_ERA_END_DAY,
+            ),
+        }
+    }
+}
+
+impl std::error::Error for ShahanshahiDateError {}
+
+impl ShahanshahiDate {
+    /// Constructs a date **within the default legal Shahanshahi civil era** only.
+    pub fn try_new(year: i32, month: u8, day: u8) -> Result<Self, ShahanshahiDateError> {
+        Self::validate_ymd(year, month, day)?;
+        if !is_within_legal_era(year, month, day) {
+            return Err(ShahanshahiDateError::OutOfLegalEra { year, month, day });
+        }
+        Ok(Self { year, month, day })
+    }
+
+    /// Like [`try_new`](Self::try_new), but allows any year that still fits the 1925 month grid and Mode A leap rule.
+    ///
+    /// Enable Cargo feature **`proleptic`**. Dates outside the legal era are conventional only (SPEC.md).
+    #[cfg(feature = "proleptic")]
+    pub fn try_new_proleptic(year: i32, month: u8, day: u8) -> Result<Self, ShahanshahiDateError> {
+        Self::validate_ymd(year, month, day)?;
+        Ok(Self { year, month, day })
+    }
+
+    fn validate_ymd(year: i32, month: u8, day: u8) -> Result<(), ShahanshahiDateError> {
+        if !(1..=12).contains(&month) {
+            return Err(ShahanshahiDateError::MonthOutOfRange { month });
+        }
+        let max_day = days_in_month(year, month);
+        if !(1..=max_day).contains(&day) {
+            return Err(ShahanshahiDateError::DayOutOfRange {
+                year,
+                month,
+                day,
+                max_day,
+            });
+        }
+        Ok(())
+    }
+
+    #[inline]
+    pub const fn year(self) -> i32 {
+        self.year
+    }
+
+    #[inline]
+    pub const fn month(self) -> u8 {
+        self.month
+    }
+
+    #[inline]
+    pub const fn day(self) -> u8 {
+        self.day
+    }
+}
+
+fn days_in_month(year: i32, month: u8) -> u8 {
+    match month {
+        1..=6 => 31,
+        7..=11 => 30,
+        12 => {
+            if is_shahanshahi_leap_arithmetic(year) {
+                30
+            } else {
+                29
+            }
+        }
+        _ => 0,
+    }
+}
+
+fn is_within_legal_era(year: i32, month: u8, day: u8) -> bool {
+    let t = (year, i32::from(month), i32::from(day));
+    let start = (
+        LEGAL_ERA_START_YEAR,
+        i32::from(LEGAL_ERA_START_MONTH),
+        i32::from(LEGAL_ERA_START_DAY),
+    );
+    let end = (
+        LEGAL_ERA_END_YEAR,
+        i32::from(LEGAL_ERA_END_MONTH),
+        i32::from(LEGAL_ERA_END_DAY),
+    );
+    t >= start && t <= end
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn era_anchor_ok() {
+        let d = ShahanshahiDate::try_new(2535, 1, 1).unwrap();
+        assert_eq!((d.year(), d.month(), d.day()), (2535, 1, 1));
+    }
+
+    #[test]
+    fn era_last_day_ok() {
+        ShahanshahiDate::try_new(2537, 6, 10).unwrap();
+    }
+
+    #[test]
+    fn month_out_of_range() {
+        assert!(matches!(
+            ShahanshahiDate::try_new(2535, 0, 1),
+            Err(ShahanshahiDateError::MonthOutOfRange { .. })
+        ));
+        assert!(matches!(
+            ShahanshahiDate::try_new(2535, 13, 1),
+            Err(ShahanshahiDateError::MonthOutOfRange { .. })
+        ));
+    }
+
+    #[test]
+    fn day_out_of_range_mehr() {
+        assert!(matches!(
+            ShahanshahiDate::try_new(2535, 7, 31),
+            Err(ShahanshahiDateError::DayOutOfRange { max_day: 30, .. })
+        ));
+    }
+
+    #[test]
+    fn esfand_29_in_common_year() {
+        ShahanshahiDate::try_new(2535, 12, 29).unwrap();
+        assert!(matches!(
+            ShahanshahiDate::try_new(2535, 12, 30),
+            Err(ShahanshahiDateError::DayOutOfRange { max_day: 29, .. })
+        ));
+    }
+
+    #[cfg(feature = "proleptic")]
+    #[test]
+    fn proleptic_leap_esfand_30() {
+        ShahanshahiDate::try_new_proleptic(2534, 12, 30).unwrap();
+    }
+
+    #[test]
+    fn before_era_rejected() {
+        assert!(matches!(
+            ShahanshahiDate::try_new(2534, 12, 29),
+            Err(ShahanshahiDateError::OutOfLegalEra { .. })
+        ));
+    }
+
+    #[test]
+    fn after_era_rejected() {
+        assert!(matches!(
+            ShahanshahiDate::try_new(2537, 6, 11),
+            Err(ShahanshahiDateError::OutOfLegalEra { .. })
+        ));
+        assert!(matches!(
+            ShahanshahiDate::try_new(2537, 7, 1),
+            Err(ShahanshahiDateError::OutOfLegalEra { .. })
+        ));
+    }
+
+    #[test]
+    fn ordering() {
+        let a = ShahanshahiDate::try_new(2535, 1, 1).unwrap();
+        let b = ShahanshahiDate::try_new(2535, 12, 29).unwrap();
+        assert!(a < b);
+    }
+}
