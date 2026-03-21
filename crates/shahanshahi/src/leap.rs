@@ -3,8 +3,8 @@
 /// Solar Hijri leap year per the 33-year arithmetic rule (Heydari-Malayeri / Borkowski range).
 #[inline]
 pub fn is_solar_hijri_leap_arithmetic(y_h: i32) -> bool {
-    let r = y_h.rem_euclid(33);
-    matches!(r, 1 | 5 | 9 | 13 | 17 | 22 | 26 | 30)
+    let rem33 = y_h.rem_euclid(33);
+    matches!(rem33, 1 | 5 | 9 | 13 | 17 | 22 | 26 | 30)
 }
 
 /// Underlying Solar Hijri year from Shahanshahi year (proleptic offset).
@@ -17,6 +17,23 @@ pub fn shahanshahi_to_hijri_shamsi_year(y_s: i32) -> i32 {
 #[inline]
 pub fn is_shahanshahi_leap_arithmetic(y_s: i32) -> bool {
     is_solar_hijri_leap_arithmetic(shahanshahi_to_hijri_shamsi_year(y_s))
+}
+
+/// Days in a Shahanshahi civil month (1925 solar law + Mode A Esfand), **1-based** `month` in `1..=12`.
+#[inline]
+pub(crate) fn days_in_shahanshahi_month(year: i32, month: u8) -> u8 {
+    match month {
+        1..=6 => 31,
+        7..=11 => 30,
+        12 => {
+            if is_shahanshahi_leap_arithmetic(year) {
+                30
+            } else {
+                29
+            }
+        }
+        _ => 0,
+    }
 }
 
 #[cfg(test)]

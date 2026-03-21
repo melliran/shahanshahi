@@ -17,6 +17,7 @@ Project direction and rationale are summarized in [`docs/VISION.md`](./docs/VISI
 1. **Spec first** — Calendar behavior is defined in [`SPEC.md`](./SPEC.md). Propose rule changes there (with citations) before or alongside code.
 2. **Golden dates** — New conversions or edge cases should add rows to [`data/reference-dates.json`](./data/reference-dates.json) with a **primary source** in the `source` field.
 3. **Rust** — `cargo fmt --all`, `cargo clippy --workspace -- -D warnings`, and `cargo test --workspace` should pass before you open a PR. If you change **dependencies** or **`Cargo.lock`**, also run `cargo audit` and `cargo deny check` (see [`docs/ENGINEERING.md`](./docs/ENGINEERING.md)).
+4. **Calendar code readability** — Multi-step date algorithms (JDN/Rata Die, anchor offsets, leap predicates) should use **clear local names** and a **short comment** tying steps to the published derivation. See [`docs/CALENDAR_CODE_STYLE.md`](./docs/CALENDAR_CODE_STYLE.md).
 
 ## Git workflow (branches, commits, pull requests)
 
@@ -42,6 +43,7 @@ Avoid long-lived personal branches; rebase or merge `main` regularly so PRs do n
   - `feat:`, `fix:`, `docs:`, `chore:`, `test:`, `refactor:`
 - **Body:** use when context is not obvious — *what* changed and *why* (not how line-by-line). Link issues with `Fixes #123` or `See #123` when relevant.
 - Do **not** add tooling attribution trailers; see [Attribution](#attribution) above.
+- **Extended guide** (types, scopes, footers, breaking changes): [`docs/COMMIT_MESSAGES.md`](./docs/COMMIT_MESSAGES.md).
 
 ### Pull requests
 

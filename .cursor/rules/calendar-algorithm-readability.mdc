@@ -1,0 +1,16 @@
+---
+description: Readable names and comments for calendar arithmetic in shahanshahi
+globs: crates/shahanshahi/**/*.rs
+alwaysApply: false
+---
+
+# Calendar algorithm readability (`shahanshahi`)
+
+When editing `crates/shahanshahi/**/*.rs` (conversions, leap rules, day counting, JDN/Rata Die):
+
+- Prefer **descriptive locals** over cryptic single letters (`g`, `dg`, `da`, `n`, `dim`, …) in multi-step algorithms.
+- Use **`year` / `month` / `day`** only for real **civil** components; name intermediates explicitly (`shifted_month`, `month_packed`, `offset_days`, `rata_die`, …).
+- For **ported formulas** (e.g. JDN ↔ Gregorian), add a brief comment naming the algorithm family and the **phases** (400-year / century / 4-year / month-day recovery, or “walk anchor years then months”).
+- Public params may use SPEC abbreviations (`y_h`, `y_s`) if documented on the function.
+
+Full rationale and examples: [`docs/CALENDAR_CODE_STYLE.md`](docs/CALENDAR_CODE_STYLE.md). Contributor summary: [`CONTRIBUTING.md`](CONTRIBUTING.md) (item on calendar code readability).
