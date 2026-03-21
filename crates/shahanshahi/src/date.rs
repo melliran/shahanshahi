@@ -1,5 +1,7 @@
 //! Civil Shahanshahi date (year, month, day) with validation per [`SPEC.md`](https://github.com/melliran/shahanshahi/blob/main/SPEC.md).
 
+use crate::convert;
+use crate::gregorian::GregorianDate;
 use crate::leap::days_in_shahanshahi_month;
 use core::fmt;
 
@@ -143,6 +145,32 @@ impl ShahanshahiDate {
     pub const fn day(self) -> u8 {
         self.day
     }
+
+    /// Converts this Shahanshahi civil date to the **proleptic Gregorian** anchor calendar (SPEC.md),
+    /// using **Rata Die** as the internal scale (see `convert` module).
+    ///
+    /// This is **infallible** for any [`ShahanshahiDate`] (the type guarantees a valid YMD on the 1925 grid).
+    #[inline]
+    pub fn to_gregorian(self) -> GregorianDate {
+        convert::shahanshahi_to_gregorian(self.year, self.month, self.day)
+    }
+
+    /// Parses a **proleptic Gregorian** civil date and returns the matching Shahanshahi YMD, **only if**
+    /// it falls in the default **legal Shahanshahi civil era** (same window as [`try_new`](Self::try_new)).
+    pub fn try_from_gregorian(date: GregorianDate) -> Result<Self, ShahanshahiDateError> {
+        let (y, m, d) = convert::gregorian_to_shahanshahi_ymd(date);
+        Self::try_new(y, m, d)
+    }
+
+    /// Like [`try_from_gregorian`](Self::try_from_gregorian), but accepts any Shahanshahi YMD consistent
+    /// with the 1925 month grid and Mode A leap rule, without enforcing the legal era (SPEC.md § Proleptic use).
+    ///
+    /// Enable Cargo feature **`proleptic`**.
+    #[cfg(feature = "proleptic")]
+    pub fn try_from_gregorian_proleptic(date: GregorianDate) -> Result<Self, ShahanshahiDateError> {
+        let (y, m, d) = convert::gregorian_to_shahanshahi_ymd(date);
+        Self::try_new_proleptic(y, m, d)
+    }
 }
 
 fn days_in_month(year: i32, month: u8) -> u8 {
@@ -239,5 +267,42 @@ mod tests {
         let a = ShahanshahiDate::try_new(2535, 1, 1).unwrap();
         let b = ShahanshahiDate::try_new(2535, 12, 29).unwrap();
         assert!(a < b);
+    }
+
+    #[test]
+    fn to_gregorian_anchor_matches_spec() {
+        use crate::GregorianDate;
+        let sh = ShahanshahiDate::try_new(2535, 1, 1).unwrap();
+        let g = sh.to_gregorian();
+        assert_eq!(GregorianDate::try_new(1976, 3, 21).unwrap(), g);
+    }
+
+    #[test]
+    fn try_from_gregorian_round_trip_legal_era() {
+        use crate::GregorianDate;
+        let g = GregorianDate::try_new(1976, 7, 22).unwrap();
+        let sh = ShahanshahiDate::try_from_gregorian(g).unwrap();
+        assert_eq!((sh.year(), sh.month(), sh.day()), (2535, 4, 31));
+        assert_eq!(sh.to_gregorian(), g);
+    }
+
+    #[test]
+    fn try_from_gregorian_rejects_proleptic_only_date() {
+        use crate::GregorianDate;
+        let g = GregorianDate::try_new(1996, 3, 20).unwrap();
+        assert!(matches!(
+            ShahanshahiDate::try_from_gregorian(g),
+            Err(ShahanshahiDateError::OutOfLegalEra { .. })
+        ));
+    }
+
+    #[cfg(feature = "proleptic")]
+    #[test]
+    fn try_from_gregorian_proleptic_accepts_outside_legal_era() {
+        use crate::GregorianDate;
+        // Golden row: last day of 2554 (= 1374 SH, common in Mode A) ≡ 1996-03-19 Gregorian.
+        let g = GregorianDate::try_new(1996, 3, 19).unwrap();
+        let sh = ShahanshahiDate::try_from_gregorian_proleptic(g).unwrap();
+        assert_eq!((sh.year(), sh.month(), sh.day()), (2554, 12, 29));
     }
 }

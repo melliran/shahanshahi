@@ -9,6 +9,8 @@
 //! - [`ShahanshahiDate`] — civil **year / month / day** with 1925 month lengths and **Mode A** leap
 //!   (33-year arithmetic on the underlying Hijri Shamsi year). By default, only dates inside the
 //!   documented **legal Shahanshahi civil era** are accepted; see that type’s docs for bounds and errors.
+//! - [`GregorianDate`] — proleptic Gregorian anchor calendar for **bidirectional** conversion via
+//!   **Rata Die** ([`ShahanshahiDate::to_gregorian`], [`ShahanshahiDate::try_from_gregorian`]).
 //!
 //! # Features
 //!

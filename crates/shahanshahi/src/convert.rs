@@ -1,7 +1,6 @@
 //! Shahanshahi ↔ Gregorian via **one** internal scale: **Rata Die** (see [`crate::rata_die`]).
 //!
 //! Anchor (SPEC.md + `data/reference-dates.json`): **1 Farvardin 2535** Shahanshahi ≡ **1976-03-21** Gregorian.
-#![cfg_attr(not(test), allow(dead_code))]
 
 use crate::gregorian::GregorianDate;
 use crate::leap::{days_in_shahanshahi_month, is_shahanshahi_leap_arithmetic};
@@ -79,12 +78,19 @@ pub(crate) fn gregorian_to_shahanshahi_ymd(date: GregorianDate) -> (i32, u8, u8)
 #[cfg(test)]
 mod tests {
     use super::*;
+    use crate::ShahanshahiDate;
 
     #[test]
-    fn anchor_maps_to_1976_03_21_and_back() {
+    fn anchor_round_trip_through_public_date_api() {
         let g = shahanshahi_to_gregorian(2535, 1, 1);
-        assert_eq!((g.year(), g.month(), g.day()), (1976, 3, 21));
+        assert_eq!(
+            (g.year(), g.month(), g.day()),
+            (1976, 3, 21),
+            "SPEC / golden anchor"
+        );
         let (y, m, d) = gregorian_to_shahanshahi_ymd(g);
         assert_eq!((y, m, d), (2535, 1, 1));
+        let back = ShahanshahiDate::try_new(y, m, d).unwrap();
+        assert_eq!(back.to_gregorian(), g);
     }
 }
