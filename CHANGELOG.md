@@ -10,6 +10,7 @@ as described in [`docs/ENGINEERING.md`](./docs/ENGINEERING.md).
 
 ### Added
 
+- [`crates/shahanshahi/examples/`](./crates/shahanshahi/examples/) — `convert_legal_era` and `convert_proleptic` (`--features proleptic`) runnable examples; CI builds all examples with `--all-features` ([issue #32](https://github.com/melliran/shahanshahi/issues/32))
 - [`docs/MIGRATING.md`](./docs/MIGRATING.md) — upgrade notes for first publish and **0.* semver**; [`docs/ENGINEERING.md`](./docs/ENGINEERING.md) — v0.1.0 readiness checklist and **`RELEASE_PLZ_PUBLISH`** guidance ([issue #8](https://github.com/melliran/shahanshahi/issues/8))
 - [`README.md`](./README.md) — current library scope, legal era vs **`proleptic`**, golden tests, and links to migration / roadmap
 - [`crates/shahanshahi/src/date.rs`](./crates/shahanshahi/src/date.rs) — [`ShahanshahiDate`](./crates/shahanshahi/src/date.rs) + [`ShahanshahiDateError`](./crates/shahanshahi/src/date.rs): civil Y/M/D validation (1925 month grid, Mode A leap), default **legal era** bounds per SPEC.md, optional **`proleptic`** feature for [`try_new_proleptic`](./crates/shahanshahi/src/date.rs) ([issue #3](https://github.com/melliran/shahanshahi/issues/3))
