@@ -43,6 +43,7 @@ Avoid long-lived personal branches; rebase or merge `main` regularly so PRs do n
   - `feat:`, `fix:`, `docs:`, `chore:`, `test:`, `refactor:`
 - **Body:** use when context is not obvious — *what* changed and *why* (not how line-by-line). Link issues with `Fixes #123` or `See #123` when relevant.
 - Do **not** add tooling attribution trailers; see [Attribution](#attribution) above.
+- **Extended guide** (types, scopes, footers, breaking changes): [`docs/COMMIT_MESSAGES.md`](./docs/COMMIT_MESSAGES.md).
 
 ### Pull requests
 
