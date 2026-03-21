@@ -18,14 +18,14 @@ GitHub Actions run on every push and pull request to `main`:
 |----------|----------------|
 | [rustfmt](../.github/workflows/rustfmt.yml) | `cargo fmt --check` — consistent formatting. |
 | [clippy](../.github/workflows/clippy.yml) | `cargo clippy … -D warnings` — no Clippy warnings. |
-| [test](../.github/workflows/test.yml) | `cargo test --workspace` — tests pass. |
+| [test](../.github/workflows/test.yml) | `cargo test --workspace --all-features` — tests pass (including `proleptic`). |
 | [crate package](../.github/workflows/crate-package.yml) | `cargo publish -p shahanshahi --dry-run` — the crate **packages and builds** as crates.io would. |
 | [audit](../.github/workflows/audit.yml) | **`cargo audit`** (RustSec) + **`cargo deny check`** (advisories, licenses, sources) on every PR and weekly on a schedule. |
 | [release-plz](../.github/workflows/release-plz.yml) | On push to **`main`**: maintain a **draft release PR** (version + changelog). **Publish** job runs only if repo variable **`RELEASE_PLZ_PUBLISH`** is `true` and **`CARGO_REGISTRY_TOKEN`** is set. |
 
 **`Cargo.lock`** is committed at the workspace root so CI and security scans are **deterministic**. Refresh it when dependencies change (`cargo update` as appropriate).
 
-Locally, match CI before opening a PR: `cargo fmt --all`, `cargo clippy --workspace --all-targets -- -D warnings`, `cargo test --workspace`, and when you touch dependencies or lockfile: `cargo audit` and `cargo deny check` (install via [`cargo-binstall`](https://github.com/cargo-bins/cargo-binstall) or `cargo install`).
+Locally, match CI before opening a PR: `cargo fmt --all`, `cargo clippy --workspace --all-targets -- -D warnings`, `cargo test --workspace --all-features`, and when you touch dependencies or lockfile: `cargo audit` and `cargo deny check` (install via [`cargo-binstall`](https://github.com/cargo-bins/cargo-binstall) or `cargo install`).
 
 **Future hooks (optional):** `cargo semver-checks` after 1.0, MSRV matrix jobs, or `minimal-versions` builds — add when the API graph justifies the cost.
 
@@ -98,6 +98,23 @@ Error from GitHub’s API often looks like:
 
 Pre-release versions (`0.2.0-alpha.1`) are still allowed; configure via release-plz / Cargo as needed.
 
+### v0.1.0 readiness
+
+Tracking checklist: [issue #8](https://github.com/melliran/shahanshahi/issues/8). Use this before treating **0.1.0** as shipped:
+
+| Item | Notes |
+|------|--------|
+| **Spec** | [`SPEC.md`](../SPEC.md) documents behavior the crate claims; [`SPEC_VERSION`](../crates/shahanshahi/src/lib.rs) matches the spec header; *Known gaps* are acceptable to call out explicitly. |
+| **Golden corpus + CI** | [`data/reference-dates.json`](../data/reference-dates.json) and integration tests (e.g. [`reference_dates.rs`](../crates/shahanshahi/tests/reference_dates.rs)) run on every PR via [test](../.github/workflows/test.yml). |
+| **README / crate docs** | [`README.md`](../README.md) and crate-level docs describe scope, legal-era default vs **`proleptic`**, and non-goals consistent with the spec. |
+| **Migration note** | [`MIGRATING.md`](./MIGRATING.md) covers `0.0.0` → first publish and **0.* semver** expectations. |
+
+**`RELEASE_PLZ_PUBLISH` — do you need to change it for 0.1.0?**
+
+- **Getting ready** (docs, merging feature work, reviewing a draft release-plz PR): **leave the variable unset or not `true`**. Release-plz still opens/updates **draft release PRs**; nothing is published to crates.io automatically.
+- **Turn it to `true` only when** you want every successful **`release-plz release`** run on `main` (after you merge the release PR) to **publish to crates.io** and create the GitHub Release **without** a manual `cargo publish`. Prerequisites: valid **`CARGO_REGISTRY_TOKEN`** secret and confidence that automation matches your release policy.
+- **First crates.io publish** is often done **manually** once ([release-plz quickstart](https://release-plz.dev/docs/github/quickstart)); you can keep **`RELEASE_PLZ_PUBLISH`** off until after that, then enable it for later versions if desired.
+
 ### Manual fallback (no automation)
 
 If release-plz is disabled or unsuitable for a one-off:
@@ -116,6 +133,6 @@ If release-plz is disabled or unsuitable for a one-off:
 | MSRV | Documented in `Cargo.toml`; bump ⇒ at least minor semver bump. |
 | Tags | `vX.Y.Z` matches crate version at release. |
 | Security | Report vulnerabilities privately per [SECURITY.md](../SECURITY.md), not public issues. |
-| Automation | Dependabot, path-based PR labels, release-plz (draft release PRs + gated publish); see [Automation (GitHub)](#automation-github) and [Release process](#release-process-cratesio). |
+| Automation | Dependabot, path-based PR labels, release-plz (draft release PRs + gated publish); see [Automation (GitHub)](#automation-github), [Release process](#release-process-cratesio), and [v0.1.0 readiness](#v010-readiness). |
 
 Questions belong in GitHub issues (see [issue templates](../.github/ISSUE_TEMPLATE/)) — **except** undisclosed security problems; use [SECURITY.md](../SECURITY.md).

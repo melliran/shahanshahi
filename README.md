@@ -12,9 +12,20 @@ Rust library for the **Shahanshahi (Imperial Iranian)** civil calendar — devel
 
 **Why spec-first:** see [`docs/VISION.md`](./docs/VISION.md).
 
-**How we build and version:** see [`docs/ENGINEERING.md`](./docs/ENGINEERING.md). Badges above map to CI: **rustfmt** (format), **clippy** (lint), **test**, **crate package** (`cargo publish --dry-run` — release-ready packaging, not a deployed server), **audit** (`cargo audit` + `cargo deny`).
+**How we build and version:** see [`docs/ENGINEERING.md`](./docs/ENGINEERING.md). Badges above map to CI: **rustfmt** (format), **clippy** (lint), **test** (workspace, all features), **crate package** (`cargo publish --dry-run` — release-ready packaging, not a deployed server), **audit** (`cargo audit` + `cargo deny`).
 
-**Status: pre-implementation.** [`SPEC.md`](./SPEC.md) is at **version 2** (legal + institutional citations, astronomical Nowruz model, **Mode A** 33-year arithmetic and **Mode B** ephemeris paths; Gazette/yearbook pins still open — see *Known gaps*). Golden rows in [`data/reference-dates.json`](./data/reference-dates.json) are populated with **traceable citations** (see [issue #2](https://github.com/melliran/shahanshahi/issues/2)); conversion **logic** in Rust still to be implemented.
+## What the library does today
+
+The [`shahanshahi`](./crates/shahanshahi) crate implements **spec version 2** of [`SPEC.md`](./SPEC.md) for **deterministic, offline** use:
+
+- **Civil dates:** [`ShahanshahiDate`](./crates/shahanshahi/src/date.rs) (1925 month grid, **Mode A** leap on the underlying Hijri Shamsi year) and [`GregorianDate`](./crates/shahanshahi/src/gregorian.rs) for **bidirectional** conversion via Rata Die.
+- **Legal era by default:** construction rejects dates outside the documented Shahanshahi civil window; enable the **`proleptic`** Cargo feature for [`try_new_proleptic`](./crates/shahanshahi/src/date.rs) when you need the same grid without era enforcement (see SPEC.md).
+- **Leap helpers:** public arithmetic aligned with SPEC (e.g. [`is_shahanshahi_leap_arithmetic`](./crates/shahanshahi/src/leap.rs)).
+- **Golden tests:** [`data/reference-dates.json`](./data/reference-dates.json) holds vetted Shahanshahi ↔ Gregorian rows with citations; [`crates/shahanshahi/tests/reference_dates.rs`](./crates/shahanshahi/tests/reference_dates.rs) checks them in CI and asserts `spec_id` matches the crate’s [`SPEC_VERSION`](./crates/shahanshahi/src/lib.rs).
+
+**Scope and non-goals** (summary): civil Shahanshahi as briefly enacted in Iran; **not** religious calendars, lunar Hijri, or locale strings beyond what the crate documents. **Mode B** (ephemeris) is specified but not implemented as runtime code in this crate yet.
+
+**Pre-1.0:** the public API may still evolve; see [`docs/MIGRATING.md`](./docs/MIGRATING.md) and [`CHANGELOG.md`](./CHANGELOG.md). Crates.io package name: **`shahanshahi`** (when published). [v0.1.0 readiness](https://github.com/melliran/shahanshahi/issues/8) and [roadmap](https://github.com/melliran/shahanshahi/issues/9) are tracked on GitHub.
 
 ## Repository layout
 
@@ -24,6 +35,7 @@ Rust library for the **Shahanshahi (Imperial Iranian)** civil calendar — devel
 | `data/reference-dates.json` | Vetted Y/M/D pairs + citations for tests |
 | `docs/ENGINEERING.md` | How we build, version, and release the library |
 | `CHANGELOG.md` | Release history (Keep a Changelog) |
+| `docs/MIGRATING.md` | Notes when upgrading between published versions |
 | `deny.toml` | `cargo-deny` policy (licenses, advisories, sources) |
 | `release-plz.toml` | Release automation config ([release-plz](https://release-plz.dev/)) |
 | `SECURITY.md` | How to report vulnerabilities privately |
@@ -35,7 +47,7 @@ From the repository root:
 
 ```bash
 cargo build -p shahanshahi
-cargo test -p shahanshahi
+cargo test -p shahanshahi --all-features
 ```
 
 ## Repository
