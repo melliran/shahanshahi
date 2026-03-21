@@ -19,6 +19,7 @@
 
 mod date;
 mod leap;
+mod rata_die;
 
 pub use date::{ShahanshahiDate, ShahanshahiDateError};
 pub use leap::{
