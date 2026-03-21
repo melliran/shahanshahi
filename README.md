@@ -40,6 +40,7 @@ The [`shahanshahi`](./crates/shahanshahi) crate implements **spec version 2** of
 | `release-plz.toml` | Release automation config ([release-plz](https://release-plz.dev/)) |
 | `SECURITY.md` | How to report vulnerabilities privately |
 | `crates/shahanshahi` | Library crate (API to grow with the spec) |
+| `crates/shahanshahi/examples/` | Runnable examples (`cargo run -p shahanshahi --example …`) |
 
 ## Building
 
@@ -48,6 +49,13 @@ From the repository root:
 ```bash
 cargo build -p shahanshahi
 cargo test -p shahanshahi --all-features
+```
+
+### Examples
+
+```bash
+cargo run -p shahanshahi --example convert_legal_era
+cargo run -p shahanshahi --example convert_proleptic --features proleptic
 ```
 
 ## Repository

@@ -16,3 +16,4 @@ jobs:
       - uses: actions/checkout@v6
       - uses: dtolnay/rust-toolchain@stable
       - run: cargo test --workspace --all-features
+      - run: cargo build -p shahanshahi --examples --all-features
