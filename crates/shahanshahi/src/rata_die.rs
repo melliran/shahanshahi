@@ -16,32 +16,51 @@ pub(crate) fn rata_die_to_gregorian(rd: i64) -> (i32, u8, u8) {
 }
 
 fn gregorian_to_jdn(year: i32, month: u8, day: u8) -> i64 {
-    let y = i64::from(year);
-    let m = i64::from(month);
-    let d = i64::from(day);
-    let a = (14 - m) / 12;
-    let y2 = y + 4800 - a;
-    let m2 = m + 12 * a - 3;
-    d + (153 * m2 + 2) / 5 + 365 * y2 + y2 / 4 - y2 / 100 + y2 / 400 - 32045
+    // Integer Gregorian→JDN: shift to a March-based month index so February is last (`shifted_month`).
+    let greg_year = i64::from(year);
+    let greg_month = i64::from(month);
+    let greg_day = i64::from(day);
+    let march_offset = (14 - greg_month) / 12;
+    let shifted_year = greg_year + 4800 - march_offset;
+    let shifted_month = greg_month + 12 * march_offset - 3;
+    greg_day + (153 * shifted_month + 2) / 5 + 365 * shifted_year + shifted_year / 4
+        - shifted_year / 100
+        + shifted_year / 400
+        - 32045
 }
 
 /// Inverse of [`gregorian_to_jdn`], for positive JDN in the usual software range.
-fn jdn_to_gregorian(mut j: i64) -> (i32, u8, u8) {
-    j += 32044;
-    let g = j / 146097;
-    let dg = j % 146097;
-    let c = ((dg / 36524 + 1) * 3) / 4;
-    let dc = dg - c * 36524;
-    let b = dc / 1461;
-    let db = dc % 1461;
-    let a = ((db / 365 + 1) * 3) / 4;
-    let da = db - a * 365;
-    let y = g * 400 + c * 100 + b * 4 + a;
-    let m = (5 * da + 308) / 153 - 2;
-    let d = da - (153 * m + 2) / 5 + 1;
-    let year = (y - 4800 + (m + 2) / 12) as i32;
-    let month = ((m + 2).rem_euclid(12) + 1) as u8;
-    let day = d as u8;
+///
+/// This is the standard decomposition (often cited from Fliegel & Van Flandern / calendar FAQs):
+/// peel **400-year**, then **century**, then **4-year** blocks from a shifted day count, then map the
+/// remaining “day-of-year” chunk to month/day with the classic `153`-term identity.
+fn jdn_to_gregorian(mut jdn: i64) -> (i32, u8, u8) {
+    jdn += 32044;
+
+    let cycles_400y = jdn / 146097;
+    let day_in_400y_cycle = jdn % 146097;
+
+    let century_leap_correction = ((day_in_400y_cycle / 36524 + 1) * 3) / 4;
+    let day_after_century = day_in_400y_cycle - century_leap_correction * 36524;
+
+    let quadrennia_4y = day_after_century / 1461;
+    let day_in_quadrennium = day_after_century % 1461;
+
+    let year_leap_correction = ((day_in_quadrennium / 365 + 1) * 3) / 4;
+    let day_within_year = day_in_quadrennium - year_leap_correction * 365;
+
+    let year_packed = cycles_400y * 400
+        + century_leap_correction * 100
+        + quadrennia_4y * 4
+        + year_leap_correction;
+
+    // `month_packed` is not a civil month yet; the next two lines are the standard month/day recovery.
+    let month_packed = (5 * day_within_year + 308) / 153 - 2;
+    let day_of_month = day_within_year - (153 * month_packed + 2) / 5 + 1;
+
+    let year = (year_packed - 4800 + (month_packed + 2) / 12) as i32;
+    let month = ((month_packed + 2).rem_euclid(12) + 1) as u8;
+    let day = day_of_month as u8;
     (year, month, day)
 }
 
