@@ -2,7 +2,7 @@
 //!
 //! This crate is **spec-first**: [`SPEC.md`](https://github.com/melliran/shahanshahi/blob/main/SPEC.md)
 //! defines calendar rules ([`SPEC_VERSION`]). Golden rows in `data/reference-dates.json` anchor tests;
-//! public APIs may still evolve before `0.1.0`.
+//! public APIs may still evolve before `1.0.0` (see SemVer policy in the repo changelog).
 //!
 //! # Types
 //!
