@@ -18,10 +18,12 @@
 #![forbid(unsafe_code)]
 
 mod date;
+mod gregorian;
 mod leap;
 mod rata_die;
 
 pub use date::{ShahanshahiDate, ShahanshahiDateError};
+pub use gregorian::{GregorianDate, GregorianDateError};
 pub use leap::{
     is_shahanshahi_leap_arithmetic, is_solar_hijri_leap_arithmetic,
     shahanshahi_to_hijri_shamsi_year,
