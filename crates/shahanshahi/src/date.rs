@@ -178,7 +178,7 @@ fn days_in_month(year: i32, month: u8) -> u8 {
 }
 
 fn is_within_legal_era(year: i32, month: u8, day: u8) -> bool {
-    let t = (year, i32::from(month), i32::from(day));
+    let candidate = (year, i32::from(month), i32::from(day));
     let start = (
         LEGAL_ERA_START_YEAR,
         i32::from(LEGAL_ERA_START_MONTH),
@@ -189,7 +189,7 @@ fn is_within_legal_era(year: i32, month: u8, day: u8) -> bool {
         i32::from(LEGAL_ERA_END_MONTH),
         i32::from(LEGAL_ERA_END_DAY),
     );
-    t >= start && t <= end
+    candidate >= start && candidate <= end
 }
 
 #[cfg(test)]

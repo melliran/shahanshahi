@@ -3,8 +3,8 @@
 /// Solar Hijri leap year per the 33-year arithmetic rule (Heydari-Malayeri / Borkowski range).
 #[inline]
 pub fn is_solar_hijri_leap_arithmetic(y_h: i32) -> bool {
-    let r = y_h.rem_euclid(33);
-    matches!(r, 1 | 5 | 9 | 13 | 17 | 22 | 26 | 30)
+    let rem33 = y_h.rem_euclid(33);
+    matches!(rem33, 1 | 5 | 9 | 13 | 17 | 22 | 26 | 30)
 }
 
 /// Underlying Solar Hijri year from Shahanshahi year (proleptic offset).
