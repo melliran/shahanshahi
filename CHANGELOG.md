@@ -10,6 +10,8 @@ as described in [`docs/ENGINEERING.md`](./docs/ENGINEERING.md).
 
 ### Added
 
+- [`crates/shahanshahi/src/date.rs`](./crates/shahanshahi/src/date.rs) — [`ShahanshahiDate`](./crates/shahanshahi/src/date.rs) + [`ShahanshahiDateError`](./crates/shahanshahi/src/date.rs): civil Y/M/D validation (1925 month grid, Mode A leap), default **legal era** bounds per SPEC.md, optional **`proleptic`** feature for [`try_new_proleptic`](./crates/shahanshahi/src/date.rs) ([issue #3](https://github.com/melliran/shahanshahi/issues/3))
+- [`crates/shahanshahi/src/leap.rs`](./crates/shahanshahi/src/leap.rs) — public Mode A helpers (`is_solar_hijri_leap_arithmetic`, `shahanshahi_to_hijri_shamsi_year`, `is_shahanshahi_leap_arithmetic`) matching SPEC.md
 - [`data/reference-dates.json`](./data/reference-dates.json) — golden Shahanshahi ↔ Gregorian rows with **Wikipedia *Solar Hijri calendar*** comparison table + **IAS 1925 law** transcription + derived month-grid dates ([issue #2](https://github.com/melliran/shahanshahi/issues/2))
 - [`crates/shahanshahi/tests/reference_dates.rs`](./crates/shahanshahi/tests/reference_dates.rs) — loads corpus, checks `spec_id` vs [`SPEC_VERSION`](./crates/shahanshahi/src/lib.rs)
 
