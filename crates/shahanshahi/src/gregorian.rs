@@ -67,7 +67,6 @@ impl GregorianDate {
     }
 
     /// Used when the YMD is already produced by a trusted inverse (`rata_die` → Gregorian).
-    #[allow(dead_code)] // called from `convert` once that module is wired
     #[inline]
     pub(crate) const fn from_ymd_unchecked(year: i32, month: u8, day: u8) -> Self {
         Self { year, month, day }

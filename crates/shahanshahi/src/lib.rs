@@ -17,6 +17,7 @@
 
 #![forbid(unsafe_code)]
 
+mod convert;
 mod date;
 mod gregorian;
 mod leap;

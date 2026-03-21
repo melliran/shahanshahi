@@ -1,6 +1,5 @@
 //! **Rata Die** (integer day count) for **proleptic Gregorian** dates: `RD 1` = Monday **1 January 1** CE.
 //! Internal conversions use Julian day number `J = RD + 1_721_425` (SPEC.md anchor calendar).
-#![cfg_attr(not(test), allow(dead_code))]
 
 /// `JDN` such that `gregorian_to_jdn(1, 1, 1) == 1_721_426` and `RD = JDN - JDN_RD_OFFSET` yields `RD == 1`.
 const JDN_RD_OFFSET: i64 = 1_721_425;
