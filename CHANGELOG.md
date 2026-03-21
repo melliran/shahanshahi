@@ -8,6 +8,10 @@ as described in [`docs/ENGINEERING.md`](./docs/ENGINEERING.md).
 
 ## [Unreleased]
 
+## [0.1.0] - 2026-03-21
+
+First crates.io release: spec-backed Shahanshahi civil dates (legal era by default), Gregorian conversion (Mode A), golden tests, and runnable examples.
+
 ### Added
 
 - [`crates/shahanshahi/examples/`](./crates/shahanshahi/examples/) — `convert_legal_era` and `convert_proleptic` (`--features proleptic`) runnable examples; CI builds all examples with `--all-features` ([issue #32](https://github.com/melliran/shahanshahi/issues/32))

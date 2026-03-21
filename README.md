@@ -25,7 +25,7 @@ The [`shahanshahi`](./crates/shahanshahi) crate implements **spec version 2** of
 
 **Scope and non-goals** (summary): civil Shahanshahi as briefly enacted in Iran; **not** religious calendars, lunar Hijri, or locale strings beyond what the crate documents. **Mode B** (ephemeris) is specified but not implemented as runtime code in this crate yet.
 
-**Pre-1.0:** the public API may still evolve; see [`docs/MIGRATING.md`](./docs/MIGRATING.md) and [`CHANGELOG.md`](./CHANGELOG.md). Crates.io package name: **`shahanshahi`** (when published). [v0.1.0 readiness](https://github.com/melliran/shahanshahi/issues/8) and [roadmap](https://github.com/melliran/shahanshahi/issues/9) are tracked on GitHub.
+**Pre-1.0:** the public API may still evolve; see [`docs/MIGRATING.md`](./docs/MIGRATING.md) and [`CHANGELOG.md`](./CHANGELOG.md). Crate on crates.io: [**`shahanshahi`**](https://crates.io/crates/shahanshahi). [v0.1.0 readiness](https://github.com/melliran/shahanshahi/issues/8) and [roadmap](https://github.com/melliran/shahanshahi/issues/9) are tracked on GitHub.
 
 ## Repository layout
 
