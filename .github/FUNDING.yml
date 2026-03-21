@@ -1,0 +1,9 @@
+# Sponsor button: https://docs.github.com/en/repositories/managing-your-repositorys-settings-features/displaying-a-sponsor-button-in-your-repository
+#
+# `github` entries must have GitHub Sponsors enabled (https://github.com/sponsors).
+# Up to 4 usernames or orgs; order is the order shown in the Sponsor dropdown.
+github: [mohijalili]
+
+# Optional: up to 4 external links (donation page, Open Collective, etc.)
+# custom:
+#   - https://example.org/support
