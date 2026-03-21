@@ -22,57 +22,63 @@ fn shahanshahi_year_length_days(year: i32) -> i32 {
 }
 
 /// Signed day offset from **1 Farvardin `ANCHOR_SH_YEAR`** to the given Shahanshahi civil date.
+///
+/// Counts whole civil days after the anchor’s Farvardin 1: walk year-by-year using Mode A year
+/// lengths, then add completed months in the target year, then `day - 1` within the target month.
 fn offset_from_anchor(year: i32, month: u8, day: u8) -> i64 {
-    let mut y = ANCHOR_SH_YEAR;
-    let mut n = 0i64;
-    while y != year {
-        if y < year {
-            n += i64::from(shahanshahi_year_length_days(y));
-            y += 1;
+    let mut cursor_year = ANCHOR_SH_YEAR;
+    let mut offset_days = 0i64;
+    while cursor_year != year {
+        if cursor_year < year {
+            offset_days += i64::from(shahanshahi_year_length_days(cursor_year));
+            cursor_year += 1;
         } else {
-            y -= 1;
-            n -= i64::from(shahanshahi_year_length_days(y));
+            cursor_year -= 1;
+            offset_days -= i64::from(shahanshahi_year_length_days(cursor_year));
         }
     }
-    for m in 1..month {
-        n += i64::from(days_in_shahanshahi_month(y, m));
+    for month_idx in 1..month {
+        offset_days += i64::from(days_in_shahanshahi_month(cursor_year, month_idx));
     }
-    n + i64::from(day) - 1
+    offset_days + i64::from(day) - 1
 }
 
-fn shahanshahi_ymd_from_offset(mut n: i64) -> (i32, u8, u8) {
-    let mut y = ANCHOR_SH_YEAR;
-    while n < 0 {
-        y -= 1;
-        n += i64::from(shahanshahi_year_length_days(y));
+/// Map “days after 1 Farvardin of the anchor year” (may be negative) to Shahanshahi YMD.
+///
+/// Normalizes the offset into `[0, year_length)`, then consumes whole months in civil order.
+fn shahanshahi_ymd_from_offset(mut offset_days: i64) -> (i32, u8, u8) {
+    let mut year = ANCHOR_SH_YEAR;
+    while offset_days < 0 {
+        year -= 1;
+        offset_days += i64::from(shahanshahi_year_length_days(year));
     }
-    while n >= i64::from(shahanshahi_year_length_days(y)) {
-        let len = i64::from(shahanshahi_year_length_days(y));
-        n -= len;
-        y += 1;
+    while offset_days >= i64::from(shahanshahi_year_length_days(year)) {
+        let year_len = i64::from(shahanshahi_year_length_days(year));
+        offset_days -= year_len;
+        year += 1;
     }
-    let mut m = 1u8;
+    let mut month = 1u8;
     loop {
-        let dim = i64::from(days_in_shahanshahi_month(y, m));
-        if n < dim {
-            return (y, m, (n + 1) as u8);
+        let days_this_month = i64::from(days_in_shahanshahi_month(year, month));
+        if offset_days < days_this_month {
+            return (year, month, (offset_days + 1) as u8);
         }
-        n -= dim;
-        m += 1;
+        offset_days -= days_this_month;
+        month += 1;
     }
 }
 
 #[inline]
 pub(crate) fn shahanshahi_to_gregorian(year: i32, month: u8, day: u8) -> GregorianDate {
-    let rd = i64::from(ANCHOR_RD) + offset_from_anchor(year, month, day);
-    let (gy, gm, gd) = rata_die_to_gregorian(rd);
-    GregorianDate::from_ymd_unchecked(gy, gm, gd)
+    let rata_die = i64::from(ANCHOR_RD) + offset_from_anchor(year, month, day);
+    let (g_year, g_month, g_day) = rata_die_to_gregorian(rata_die);
+    GregorianDate::from_ymd_unchecked(g_year, g_month, g_day)
 }
 
 #[inline]
 pub(crate) fn gregorian_to_shahanshahi_ymd(date: GregorianDate) -> (i32, u8, u8) {
-    let rd = gregorian_to_rata_die(date.year(), date.month(), date.day());
-    shahanshahi_ymd_from_offset(rd - i64::from(ANCHOR_RD))
+    let rata_die = gregorian_to_rata_die(date.year(), date.month(), date.day());
+    shahanshahi_ymd_from_offset(rata_die - i64::from(ANCHOR_RD))
 }
 
 #[cfg(test)]
