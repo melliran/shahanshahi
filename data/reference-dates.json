@@ -63,10 +63,10 @@
       "notes": "Leap-year Nowruz on Gregorian 20 March; proleptic Shahanshahi outside legal Pahlavi era."
     },
     {
-      "shahanshahi": { "year": 2554, "month": 12, "day": 30 },
+      "shahanshahi": { "year": 2554, "month": 12, "day": 29 },
       "gregorian": { "year": 1996, "month": 3, "day": 19 },
-      "source": "Wikipedia contributors, \"Solar Hijri calendar\", section \"Comparison with Gregorian calendar\" (SH 1374 ends 19 March 1996; 1375* leap follows). https://en.wikipedia.org/wiki/Solar_Hijri_calendar (accessed 2026-03-20). 30 Esfand in leap year 1374 SH per 1925 law + table.",
-      "notes": "Leap Esfand day before 1 Farvardin 2555; proleptic."
+      "source": "Wikipedia contributors, \"Solar Hijri calendar\", section \"Comparison with Gregorian calendar\" (SH 1374 ends 19 March 1996; 1375* leap follows). https://en.wikipedia.org/wiki/Solar_Hijri_calendar (accessed 2026-03-20). Aligned with SPEC.md § Mode A: 1374 Hijri Shamsi has remainder 21 (mod 33) and is a **common** year — Esfand 29 days — so the last civil day is 29 Esfand, still Gregorian 19 March 1996 before 1 Farvardin 1375 on 20 March.",
+      "notes": "Last day of proleptic Shahanshahi 2554 (= 1374 SH) before 1 Farvardin 2555; Mode A month grid."
     }
   ]
 }
