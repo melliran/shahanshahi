@@ -19,6 +19,23 @@ pub fn is_shahanshahi_leap_arithmetic(y_s: i32) -> bool {
     is_solar_hijri_leap_arithmetic(shahanshahi_to_hijri_shamsi_year(y_s))
 }
 
+/// Days in a Shahanshahi civil month (1925 solar law + Mode A Esfand), **1-based** `month` in `1..=12`.
+#[inline]
+pub(crate) fn days_in_shahanshahi_month(year: i32, month: u8) -> u8 {
+    match month {
+        1..=6 => 31,
+        7..=11 => 30,
+        12 => {
+            if is_shahanshahi_leap_arithmetic(year) {
+                30
+            } else {
+                29
+            }
+        }
+        _ => 0,
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;

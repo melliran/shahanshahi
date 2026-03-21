@@ -1,6 +1,6 @@
 //! Civil Shahanshahi date (year, month, day) with validation per [`SPEC.md`](https://github.com/melliran/shahanshahi/blob/main/SPEC.md).
 
-use crate::is_shahanshahi_leap_arithmetic;
+use crate::leap::days_in_shahanshahi_month;
 use core::fmt;
 
 /// First civil day of the default **legal Shahanshahi era** (inclusive), per SPEC.md § Era of applicability.
@@ -146,18 +146,7 @@ impl ShahanshahiDate {
 }
 
 fn days_in_month(year: i32, month: u8) -> u8 {
-    match month {
-        1..=6 => 31,
-        7..=11 => 30,
-        12 => {
-            if is_shahanshahi_leap_arithmetic(year) {
-                30
-            } else {
-                29
-            }
-        }
-        _ => 0,
-    }
+    days_in_shahanshahi_month(year, month)
 }
 
 fn is_within_legal_era(year: i32, month: u8, day: u8) -> bool {
