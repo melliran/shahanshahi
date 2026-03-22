@@ -8,14 +8,17 @@ as described in [`docs/ENGINEERING.md`](./docs/ENGINEERING.md).
 
 ## [Unreleased]
 
-### Changed
-
-- **`chrono` feature:** [`GregorianDate::to_chrono_naive_date`](./crates/shahanshahi/src/chrono_compat.rs) and [`ShahanshahiDate::to_chrono_naive_date`](./crates/shahanshahi/src/chrono_compat.rs) return `Result` instead of panicking when the Gregorian year is outside `chrono::NaiveDate`’s supported range; see [`ChronoNaiveDateOutOfRange`](./crates/shahanshahi/src/chrono_compat.rs).
+## [0.2.0] - 2026-03-22
 
 ### Added
 
 - Optional Cargo features **`serde`**, **`chrono`**, and **`time`**: `Serialize`/`Deserialize` on civil date types; `NaiveDate` / `time::Date` conversion helpers; default **`std`** feature with `default-features = false` for `#![no_std]` builds ([issue #5](https://github.com/melliran/shahanshahi/issues/5))
 - [`ShahanshahiDateError::InvalidGregorianDate`](./crates/shahanshahi/src/date.rs) and `From<GregorianDateError>` for interop validation failures
+- [`ChronoNaiveDateOutOfRange`](./crates/shahanshahi/src/chrono_compat.rs) when a valid [`GregorianDate`](./crates/shahanshahi/src/gregorian.rs) lies outside `chrono::NaiveDate`’s year range
+
+### Changed
+
+- **`chrono` feature:** [`GregorianDate::to_chrono_naive_date`](./crates/shahanshahi/src/chrono_compat.rs) and [`ShahanshahiDate::to_chrono_naive_date`](./crates/shahanshahi/src/chrono_compat.rs) return `Result<_, ChronoNaiveDateOutOfRange>` instead of panicking for out-of-range years ([#38](https://github.com/melliran/shahanshahi/pull/38))
 
 ## [0.1.0] - 2026-03-21
 
