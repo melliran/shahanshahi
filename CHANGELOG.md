@@ -8,6 +8,16 @@ as described in [`docs/ENGINEERING.md`](./docs/ENGINEERING.md).
 
 ## [Unreleased]
 
+## [0.2.0](https://github.com/melliran/shahanshahi/compare/v0.1.0...v0.2.0) - 2026-03-22
+
+### Added
+
+- *(shahanshahi)* optional serde, chrono, time, and no_std ([#36](https://github.com/melliran/shahanshahi/pull/36))
+
+### Fixed
+
+- *(shahanshahi)* avoid panic mapping Gregorian dates to chrono ([#38](https://github.com/melliran/shahanshahi/pull/38))
+
 ### Changed
 
 - **`chrono` feature:** [`GregorianDate::to_chrono_naive_date`](./crates/shahanshahi/src/chrono_compat.rs) and [`ShahanshahiDate::to_chrono_naive_date`](./crates/shahanshahi/src/chrono_compat.rs) return `Result` instead of panicking when the Gregorian year is outside `chrono::NaiveDate`’s supported range; see [`ChronoNaiveDateOutOfRange`](./crates/shahanshahi/src/chrono_compat.rs).
