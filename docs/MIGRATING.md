@@ -2,6 +2,13 @@
 
 Notes for upgrading between **published** versions of the `shahanshahi` crate. Until **1.0.0**, minor releases in the **0.* line** may change or extend the public API; check [`CHANGELOG.md`](../CHANGELOG.md) for each release.
 
+## From `0.1.0` to `0.2.0`
+
+- **Optional ecosystem:** enable Cargo features **`serde`**, **`chrono`**, and/or **`time`** as needed; defaults are unchanged for callers who only need civil types and conversion.
+- **`no_std`:** use `default-features = false` on the dependency; see crate rustdoc **Features**.
+- **`chrono`:** [`to_chrono_naive_date`](../crates/shahanshahi/src/chrono_compat.rs) returns `Result` (see [`ChronoNaiveDateOutOfRange`](../crates/shahanshahi/src/chrono_compat.rs)).
+- **Errors:** [`ShahanshahiDateError::InvalidGregorianDate`](../crates/shahanshahi/src/date.rs) may appear when using chrono / `time` interop; adjust exhaustive matches if you match the enum structurally.
+
 ## From repository / `0.0.0` to first crates.io release (e.g. `0.1.0`)
 
 `0.0.0` was a **workspace placeholder** on crates.io (if reserved) or pre-publish only; treat the first real release as the baseline **documented API** in rustdoc and [`SPEC.md`](../SPEC.md).
