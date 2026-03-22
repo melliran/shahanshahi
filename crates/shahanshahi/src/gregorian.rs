@@ -3,6 +3,7 @@
 use core::fmt;
 
 /// A valid **proleptic Gregorian** civil date (`year`, `month` 1..=12, `day` consistent with month/leap rule).
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, PartialOrd, Ord)]
 pub struct GregorianDate {
     year: i32,
@@ -11,6 +12,7 @@ pub struct GregorianDate {
 }
 
 /// Why a [`GregorianDate`] could not be constructed.
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub enum GregorianDateError {
     /// `month` is not in `1..=12`.
@@ -46,6 +48,7 @@ impl fmt::Display for GregorianDateError {
     }
 }
 
+#[cfg(feature = "std")]
 impl std::error::Error for GregorianDateError {}
 
 impl GregorianDate {

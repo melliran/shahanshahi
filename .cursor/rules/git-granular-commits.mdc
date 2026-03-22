@@ -1,0 +1,30 @@
+---
+description: Prefer small, reviewable commits grouped by concern, not one giant diff
+alwaysApply: true
+---
+
+# Granular commits (this repository)
+
+When preparing **`git commit`** for this repo, **avoid bundling unrelated edits into a single commit**. Prefer **several focused commits** that are easy to read, bisect, and revert.
+
+## How to split
+
+Group changes by **one primary concern** per commit, for example:
+
+- **Manifest / tooling** — `Cargo.toml`, `Cargo.lock`, workspace config, CI workflow tweaks that stand alone.
+- **One crate or area** — e.g. `crates/shahanshahi/` implementation vs. root docs.
+- **One feature slice** — dependency wiring first, then code that uses it, then tests, then user-facing docs.
+- **Tests** — integration or unit tests that exercise the commit above (can share a commit with the code if tiny; otherwise separate **`test(scope): …`**).
+- **Docs** — README, `docs/*.md`, `CHANGELOG.md` under **`docs:`** / **`chore(docs):`** when they are not the only change.
+
+Use judgment: a **single file** can still be split with **`git add -p`** if it mixes unrelated concerns (e.g. refactor + new API).
+
+## What “good” looks like
+
+- Each commit has a **clear story** (subject + short body when needed).
+- **`cargo test`** / **`cargo clippy`** (as appropriate for the touched crate) passes **after each commit** when you are stacking work — especially before pushing.
+- **Fixes #n** / **See #n** appears on the commit that **primarily** closes or references the issue (often the main **`feat`**), not repeated on every doc-only follow-up.
+
+## Relationship to message style
+
+Subjects and bodies still follow **[`git-commit-messages.mdc`](./git-commit-messages.mdc)** (Conventional Commits, length, no bot trailers).

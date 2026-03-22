@@ -12,14 +12,29 @@ readme.workspace = true
 all-features = true
 
 [dependencies]
+chrono = { version = "0.4", optional = true, default-features = false, features = ["std"] }
+serde = { version = "1", optional = true, default-features = false, features = ["derive"] }
+time = { version = "0.3", optional = true, default-features = false, features = ["std"] }
 
 [features]
-default = []
+default = ["std"]
+std = []
 proleptic = []
+serde = ["dep:serde"]
+chrono = ["dep:chrono", "std"]
+time = ["dep:time", "std"]
 
 [[example]]
 name = "convert_proleptic"
 required-features = ["proleptic"]
+
+[[test]]
+name = "serde_roundtrip"
+required-features = ["serde"]
+
+[[test]]
+name = "interop_chrono_time"
+required-features = ["chrono", "time"]
 
 [dev-dependencies]
 serde = { version = "1", features = ["derive"] }

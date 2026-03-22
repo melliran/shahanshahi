@@ -22,6 +22,7 @@ The [`shahanshahi`](./crates/shahanshahi) crate implements **spec version 2** of
 - **Legal era by default:** construction rejects dates outside the documented Shahanshahi civil window; enable the **`proleptic`** Cargo feature for [`try_new_proleptic`](./crates/shahanshahi/src/date.rs) when you need the same grid without era enforcement (see SPEC.md).
 - **Leap helpers:** public arithmetic aligned with SPEC (e.g. [`is_shahanshahi_leap_arithmetic`](./crates/shahanshahi/src/leap.rs)).
 - **Golden tests:** [`data/reference-dates.json`](./data/reference-dates.json) holds vetted Shahanshahi ↔ Gregorian rows with citations; [`crates/shahanshahi/tests/reference_dates.rs`](./crates/shahanshahi/tests/reference_dates.rs) checks them in CI and asserts `spec_id` matches the crate’s [`SPEC_VERSION`](./crates/shahanshahi/src/lib.rs).
+- **Optional ecosystem (Cargo features):** `serde` on date types; `chrono` / `time` conversion helpers; `std` is default and can be disabled for `#![no_std]` (see crate rustdoc **Features**).
 
 **Scope and non-goals** (summary): civil Shahanshahi as briefly enacted in Iran; **not** religious calendars, lunar Hijri, or locale strings beyond what the crate documents. **Mode B** (ephemeris) is specified but not implemented as runtime code in this crate yet.
 

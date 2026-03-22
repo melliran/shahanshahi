@@ -8,6 +8,11 @@ as described in [`docs/ENGINEERING.md`](./docs/ENGINEERING.md).
 
 ## [Unreleased]
 
+### Added
+
+- Optional Cargo features **`serde`**, **`chrono`**, and **`time`**: `Serialize`/`Deserialize` on civil date types; `NaiveDate` / `time::Date` conversion helpers; default **`std`** feature with `default-features = false` for `#![no_std]` builds ([issue #5](https://github.com/melliran/shahanshahi/issues/5))
+- [`ShahanshahiDateError::InvalidGregorianDate`](./crates/shahanshahi/src/date.rs) and `From<GregorianDateError>` for interop validation failures
+
 ## [0.1.0] - 2026-03-21
 
 First crates.io release: spec-backed Shahanshahi civil dates (legal era by default), Gregorian conversion (Mode A), golden tests, and runnable examples.
