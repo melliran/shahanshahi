@@ -2,6 +2,9 @@
 
 Thanks for helping improve Persian calendar tooling for software.
 
+This project follows the **[Contributor Covenant](https://www.contributor-covenant.org/)**;
+see [`CODE_OF_CONDUCT.md`](./CODE_OF_CONDUCT.md).
+
 ## Attribution
 
 This project does **not** use automated-tool attribution in Git history:
