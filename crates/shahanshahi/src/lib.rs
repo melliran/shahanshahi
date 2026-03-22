@@ -14,9 +14,17 @@
 //!
 //! # Features
 //!
+//! - **`std`** (default) — [`std::error::Error`] for date errors; disable with `default-features = false`
+//!   for `#![no_std]` builds (core-only algorithms and types).
 //! - **`proleptic`** — [`ShahanshahiDate::try_new_proleptic`] validates the same calendar grid without
 //!   enforcing the legal era (SPEC.md § Proleptic use).
+//! - **`serde`** — `serde` `Serialize` / `Deserialize` on [`ShahanshahiDate`] and [`GregorianDate`]
+//!   (optional dependency with `default-features = false`).
+//! - **`chrono`** — `chrono::NaiveDate` conversions on [`GregorianDate`] and [`ShahanshahiDate`]
+//!   (implies **`std`**).
+//! - **`time`** — `time::Date` conversions on [`GregorianDate`] and [`ShahanshahiDate`] (implies **`std`**).
 
+#![cfg_attr(not(feature = "std"), no_std)]
 #![forbid(unsafe_code)]
 
 mod convert;
@@ -24,6 +32,11 @@ mod date;
 mod gregorian;
 mod leap;
 mod rata_die;
+
+#[cfg(feature = "chrono")]
+mod chrono_compat;
+#[cfg(feature = "time")]
+mod time_compat;
 
 pub use date::{ShahanshahiDate, ShahanshahiDateError};
 pub use gregorian::{GregorianDate, GregorianDateError};

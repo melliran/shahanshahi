@@ -1,7 +1,7 @@
 //! Civil Shahanshahi date (year, month, day) with validation per [`SPEC.md`](https://github.com/melliran/shahanshahi/blob/main/SPEC.md).
 
 use crate::convert;
-use crate::gregorian::GregorianDate;
+use crate::gregorian::{GregorianDate, GregorianDateError};
 use crate::leap::days_in_shahanshahi_month;
 use core::fmt;
 
@@ -37,6 +37,7 @@ pub const LEGAL_ERA_END_DAY: u8 = 10;
 /// With the **`proleptic`** Cargo feature, [`ShahanshahiDate::try_new_proleptic`] validates the same
 /// month grid and leap rule but **does not** enforce the legal era. Such dates are not historically
 /// authorized as civil Shahanshahi outside the era (SPEC.md § Proleptic use).
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, PartialOrd, Ord)]
 pub struct ShahanshahiDate {
     year: i32,
@@ -45,6 +46,7 @@ pub struct ShahanshahiDate {
 }
 
 /// Why a [`ShahanshahiDate`] could not be constructed.
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub enum ShahanshahiDateError {
     /// `month` is not in `1..=12`.
@@ -58,6 +60,8 @@ pub enum ShahanshahiDateError {
     },
     /// Calendar-valid date outside the default legal era ([`ShahanshahiDate::try_new`] only).
     OutOfLegalEra { year: i32, month: u8, day: u8 },
+    /// Proleptic Gregorian components could not be built (e.g. chrono / `time` interop).
+    InvalidGregorianDate(GregorianDateError),
 }
 
 impl fmt::Display for ShahanshahiDateError {
@@ -90,11 +94,28 @@ impl fmt::Display for ShahanshahiDateError {
                 em = LEGAL_ERA_END_MONTH,
                 ed = LEGAL_ERA_END_DAY,
             ),
+            Self::InvalidGregorianDate(err) => {
+                write!(f, "invalid Gregorian date from interop: {err}")
+            }
         }
     }
 }
 
-impl std::error::Error for ShahanshahiDateError {}
+#[cfg(feature = "std")]
+impl std::error::Error for ShahanshahiDateError {
+    fn source(&self) -> Option<&(dyn std::error::Error + 'static)> {
+        match self {
+            Self::InvalidGregorianDate(err) => Some(err),
+            _ => None,
+        }
+    }
+}
+
+impl From<GregorianDateError> for ShahanshahiDateError {
+    fn from(err: GregorianDateError) -> Self {
+        Self::InvalidGregorianDate(err)
+    }
+}
 
 impl ShahanshahiDate {
     /// Constructs a date **within the default legal Shahanshahi civil era** only.
