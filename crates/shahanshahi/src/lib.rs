@@ -35,6 +35,8 @@ mod rata_die;
 
 #[cfg(feature = "chrono")]
 mod chrono_compat;
+#[cfg(feature = "chrono")]
+pub use chrono_compat::ChronoNaiveDateOutOfRange;
 #[cfg(feature = "time")]
 mod time_compat;
 
