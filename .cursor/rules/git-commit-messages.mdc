@@ -10,7 +10,7 @@ When proposing or running `git commit` for this repo:
 - Use **[Conventional Commits](https://www.conventionalcommits.org/)**-style subjects: `type(scope): imperative description` (see types below). Scope is optional; use a crate or area when it helps (`shahanshahi`, `ci`, `spec`, …).
 - **Subject:** imperative mood, **~50–72 characters**, **no trailing period**, lowercase after the colon unless a proper noun.
 - **Body:** optional blank line, then *what* / *why* (not a line-by-line diff). Wrap near **72 columns**. Link issues with `Fixes #n` / `See #n` when relevant.
-- **One logical change per commit** when practical.
+- **One logical change per commit** when practical; for splitting work across several commits, see [`git-granular-commits.mdc`](./git-granular-commits.mdc).
 - **Breaking changes:** `!` after type/scope and/or a `BREAKING CHANGE:` footer describing user impact.
 - **Never** add tool-attribution trailers (`Co-authored-by:` for bots, `Made-with:`, etc.) or `--trailer` marketing lines — see [`contributor-attribution.mdc`](./contributor-attribution.mdc).
 
