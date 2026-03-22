@@ -8,6 +8,10 @@ as described in [`docs/ENGINEERING.md`](./docs/ENGINEERING.md).
 
 ## [Unreleased]
 
+### Changed
+
+- **`chrono` feature:** [`GregorianDate::to_chrono_naive_date`](./crates/shahanshahi/src/chrono_compat.rs) and [`ShahanshahiDate::to_chrono_naive_date`](./crates/shahanshahi/src/chrono_compat.rs) return `Result` instead of panicking when the Gregorian year is outside `chrono::NaiveDate`’s supported range; see [`ChronoNaiveDateOutOfRange`](./crates/shahanshahi/src/chrono_compat.rs).
+
 ### Added
 
 - Optional Cargo features **`serde`**, **`chrono`**, and **`time`**: `Serialize`/`Deserialize` on civil date types; `NaiveDate` / `time::Date` conversion helpers; default **`std`** feature with `default-features = false` for `#![no_std]` builds ([issue #5](https://github.com/melliran/shahanshahi/issues/5))
