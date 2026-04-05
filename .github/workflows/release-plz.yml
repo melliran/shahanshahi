@@ -1,6 +1,10 @@
 # https://release-plz.dev/docs/github/quickstart
-# — release-pr: opens/updates a draft PR (version bump + CHANGELOG).
+# — release-pr: opens/updates a draft PR (version bump + CHANGELOG) on every push to main.
 # — release: publishes to crates.io + GitHub Release only when explicitly enabled (repo variable).
+#
+# Preferred path: review and merge the bot's draft PR for each release.
+# If a manual release PR is used instead, close the bot PR (don't merge both).
+# Full guide: docs/ENGINEERING.md → "Release process" → "Day-to-day flow".
 #
 # If you see: "GitHub Actions is not permitted to create or approve pull requests":
 # enable repo setting (see docs/ENGINEERING.md) or set secret RELEASE_PLZ_GITHUB_TOKEN (PAT).
