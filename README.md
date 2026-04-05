@@ -41,7 +41,9 @@ The [`shahanshahi`](./crates/shahanshahi) crate implements **spec version 2** of
 | `release-plz.toml` | Release automation config ([release-plz](https://release-plz.dev/)) |
 | `SECURITY.md` | How to report vulnerabilities privately |
 | `crates/shahanshahi` | Library crate (API to grow with the spec) |
+| `crates/shahanshahi-cli` | Command-line binary `shahanshahi` (batch / pipe-friendly conversion) |
 | `crates/shahanshahi/examples/` | Runnable examples (`cargo run -p shahanshahi --example …`) |
+| `docs/CLI.md` | CLI install, flags, and text / JSON / CSV formats |
 
 ## Building
 
@@ -52,11 +54,27 @@ cargo build -p shahanshahi
 cargo test -p shahanshahi --all-features
 ```
 
+The CLI is a separate workspace crate (version **0.1.0**, independent of the library):
+
+```bash
+cargo build -p shahanshahi-cli
+cargo test -p shahanshahi-cli
+```
+
 ### Examples
 
 ```bash
 cargo run -p shahanshahi --example convert_legal_era
 cargo run -p shahanshahi --example convert_proleptic --features proleptic
+```
+
+### Command-line tool
+
+Operators can convert dates from the shell with **`shahanshahi convert`** (stdin/stdout, optional JSON or CSV). Full reference: [`docs/CLI.md`](./docs/CLI.md).
+
+```bash
+cargo run -p shahanshahi-cli -- convert 1976-03-21
+printf "1976-03-21\n1977-03-21\n" | cargo run -p shahanshahi-cli -- convert
 ```
 
 ## Repository

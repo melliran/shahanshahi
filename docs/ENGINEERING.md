@@ -2,6 +2,8 @@
 
 This document describes how we build and ship **shahanshahi** as a Rust library. It complements [`VISION.md`](./VISION.md) (why the project exists) and [`CONTRIBUTING.md`](../CONTRIBUTING.md) (day-to-day contribution rules).
 
+The workspace also contains **`shahanshahi-cli`** (`crates/shahanshahi-cli`), an operator-facing **`shahanshahi`** binary documented in [`CLI.md`](./CLI.md). It is versioned separately from the library; release automation in [`release-plz.toml`](../release-plz.toml) currently targets the **`shahanshahi`** package only.
+
 ## What we are building
 
 - **Shape:** A **Rust library crate** (`crates/shahanshahi`) consumed via Cargo / crates.io — not a hosted “production service” with its own runtime SLA.
