@@ -35,7 +35,8 @@ The [`shahanshahi`](./crates/shahanshahi) crate implements **spec version 2** of
 | `SPEC.md` | Authoritative rules this code implements |
 | `data/reference-dates.json` | Vetted Y/M/D pairs + citations for tests |
 | `docs/ENGINEERING.md` | How we build, version, and release the library |
-| `CHANGELOG.md` | Release history (Keep a Changelog) |
+| `CHANGELOG.md` | Release history for the **`shahanshahi`** library (Keep a Changelog) |
+| `CHANGELOG-CLI.md` | Release history for **`shahanshahi-cli`** / `shahanshahi` binary |
 | `docs/MIGRATING.md` | Notes when upgrading between published versions |
 | `deny.toml` | `cargo-deny` policy (licenses, advisories, sources) |
 | `release-plz.toml` | Release automation config ([release-plz](https://release-plz.dev/)) |

@@ -16,3 +16,4 @@ jobs:
       - uses: actions/checkout@v6
       - uses: dtolnay/rust-toolchain@stable
       - run: cargo publish -p shahanshahi --dry-run
+      - run: cargo publish -p shahanshahi-cli --dry-run
