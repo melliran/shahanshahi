@@ -6,9 +6,9 @@ The CLI crate is versioned **independently** of the library (starts at **0.1.0**
 
 ## Releases and changelog
 
-- **Changelog:** [`CHANGELOG-CLI.md`](../CHANGELOG-CLI.md) (Keep a Changelog; SemVer applies to the CLI surface). While the [**CLI tooling**](https://github.com/melliran/shahanshahi/milestone/2) milestone is **open**, add entries under **`[Unreleased]`** only.
-- **Registry / release-plz:** There is **no** crates.io release and **no** `shahanshahi-cli` entry in [`release-plz.toml`](../release-plz.toml) until maintainers **close that milestone** and intentionally ship the CLI (then add the package to `release-plz.toml` and/or `cargo publish -p shahanshahi-cli`). Until then use `cargo install --path` or `cargo run`. Details: [`docs/ENGINEERING.md`](./ENGINEERING.md) → *Multi-crate releases*.
-- **Library-only “optics” release:** Shipping the CLI does **not** require a new **`shahanshahi`** version under strict SemVer; an **optional** library patch (e.g. **0.2.1**) is only if you want the main [`CHANGELOG.md`](../CHANGELOG.md) to mention the new binary for registry readers.
+- History: [`CHANGELOG-CLI.md`](../CHANGELOG-CLI.md).
+- While [CLI tooling](https://github.com/melliran/shahanshahi/milestone/2) is open, install from the repo (`cargo install --path` or `cargo run`) and add notes under **`[Unreleased]`** in that changelog.
+- When the milestone closes, the plan is **`shahanshahi-cli` 0.1.0** on crates.io together with **`shahanshahi` 0.2.1** (library changelog mentions the CLI). [`release-plz.toml`](../release-plz.toml) lists only the library until you add **`shahanshahi-cli`** for release automation. Full steps: [`docs/ENGINEERING.md`](./ENGINEERING.md) → *Multi-crate releases*.
 
 ## Install
 
