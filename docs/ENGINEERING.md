@@ -87,12 +87,47 @@ Error from GitHub’s API often looks like:
 
 ### Day-to-day flow
 
+#### Why a bot PR appears
+
+Every push to `main` triggers the **`release-plz-pr`** job. Release-plz compares the latest crates.io version with the commits since that release, infers the next semver bump from Conventional Commit prefixes, and opens (or updates) a **draft** PR on a `release-plz-*` branch with the proposed `Cargo.toml` version and [`CHANGELOG.md`](../CHANGELOG.md) edits. The PR is labelled `chore` and configured in [`release-plz.toml`](../release-plz.toml).
+
+This is **normal and expected** — the bot PR is a convenience, not a mandate to merge immediately. It stays in draft until a maintainer is ready to release.
+
+#### Preferred path — merge the release-plz draft PR
+
 1. Merge ordinary work to `main` (Conventional Commit–style messages help release-plz infer semver bumps).
-2. **Release-plz** opens or updates a **draft** PR (branch prefix `release-plz-`, label `chore`) with **`Cargo.toml` version** and [`CHANGELOG.md`](../CHANGELOG.md) edits — see [`release-plz.toml`](../release-plz.toml).
-3. **Review** that PR (spec readiness, version level, changelog text). Mark it **ready for review** and **merge** when satisfied.
-4. **Publishing:**
-   - **Automated:** with `RELEASE_PLZ_PUBLISH=true` and a valid `CARGO_REGISTRY_TOKEN`, the **`release-plz-release`** job on `main` runs [`release-plz release`](https://release-plz.dev/docs/usage/release) (tags + GitHub Release + `cargo publish` as configured).
+2. **Wait** for release-plz to open or update its draft PR with the proposed version and changelog.
+3. **Review** that PR: check the version level (patch / minor / major), changelog prose, and spec readiness.
+4. **Edit if needed** — push fixup commits to the bot's branch for changelog wording or version override. Release-plz tolerates manual edits on its branch.
+5. Mark the PR **ready for review** and **merge** when satisfied.
+6. **Publishing** happens according to the `RELEASE_PLZ_PUBLISH` variable:
+   - **Automated:** with `RELEASE_PLZ_PUBLISH=true` and a valid `CARGO_REGISTRY_TOKEN`, the **`release-plz-release`** job on `main` runs [`release-plz release`](https://release-plz.dev/docs/usage/release) (tags + GitHub Release + `cargo publish`).
    - **Manual override:** you can still `cargo publish -p shahanshahi` and create the GitHub Release yourself if you disable the variable or skip automation.
+
+#### When to use a manual release PR instead
+
+Sometimes the bot PR is not suitable — for example, if you need to **batch several unreleased changes** under a hand-crafted changelog, **skip a version**, or release a **pre-release** tag (`0.2.0-alpha.1`) that release-plz does not propose automatically.
+
+In that case:
+
+1. Create a branch (e.g. `chore/release-0.3.0`) and manually bump `version` in the root [`Cargo.toml`](../Cargo.toml) and update [`CHANGELOG.md`](../CHANGELOG.md).
+2. Open a PR, review, and merge to `main` as usual.
+3. **Close the superseded bot PR** — do **not** merge both. Only one version bump should land per release. Add a comment (e.g. *"Superseded by #NN"*) so the history is clear.
+
+After merging, release-plz will detect that the version on `main` already matches (or exceeds) what it would propose and will **not** re-open a conflicting PR.
+
+#### Handling duplicate or stale release PRs
+
+- **One release PR at a time.** If a release-plz draft PR and a manual release PR both exist, decide which to use and **close the other** (not merge).
+- If you close a bot PR that is no longer relevant, release-plz will open a fresh one on the next push to `main` if there are new unreleased commits.
+- Leaving stale bot PRs open is harmless (they stay in draft) but adds noise — prefer closing them promptly with a short note.
+
+#### Publishing and `RELEASE_PLZ_PUBLISH`
+
+| Variable state | What happens on merge to `main` |
+|----------------|---------------------------------|
+| **unset / not `true`** | Release-plz opens draft PRs only. **No** crates.io publish, **no** GitHub Release. You can still publish manually (`cargo publish -p shahanshahi` + tag + GitHub Release). |
+| **`true`** | The **`release-plz-release`** job runs `release-plz release`, which creates a **git tag**, a **GitHub Release**, and calls **`cargo publish`** — provided **`CARGO_REGISTRY_TOKEN`** is set. |
 
 **First publish to crates.io** is often **manual** ([crates.io limitation](https://release-plz.dev/docs/github/quickstart); trusted publishing has similar constraints). Do the first `cargo publish` locally, then enable automation for subsequent versions.
 
