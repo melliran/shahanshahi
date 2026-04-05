@@ -73,3 +73,70 @@ pub fn parse_ymd(s: &str) -> Result<DateTriple> {
 pub fn format_ymd(d: &DateTriple) -> String {
     format!("{:04}-{:02}-{:02}", d.year, d.month, d.day)
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn parse_positive_year() {
+        let d = parse_ymd("1976-03-21").unwrap();
+        assert_eq!((d.year, d.month, d.day), (1976, 3, 21));
+    }
+
+    #[test]
+    fn parse_negative_year() {
+        let d = parse_ymd("-0559-01-01").unwrap();
+        assert_eq!((d.year, d.month, d.day), (-559, 1, 1));
+    }
+
+    #[test]
+    fn parse_no_leading_zeros() {
+        let d = parse_ymd("2535-1-1").unwrap();
+        assert_eq!((d.year, d.month, d.day), (2535, 1, 1));
+    }
+
+    #[test]
+    fn parse_rejects_garbage() {
+        assert!(parse_ymd("not-a-date").is_err());
+        assert!(parse_ymd("1976/03/21").is_err());
+        assert!(parse_ymd("1976-03").is_err());
+    }
+
+    #[test]
+    fn format_round_trip() {
+        let d = DateTriple {
+            year: 2535,
+            month: 1,
+            day: 1,
+        };
+        assert_eq!(format_ymd(&d), "2535-01-01");
+    }
+
+    #[test]
+    fn convert_gregorian_to_shahanshahi() {
+        let input = parse_ymd("1976-03-21").unwrap();
+        let output = convert(input, &Calendar::Gregorian, &Calendar::Shahanshahi, false).unwrap();
+        assert_eq!((output.year, output.month, output.day), (2535, 1, 1));
+    }
+
+    #[test]
+    fn convert_shahanshahi_to_gregorian() {
+        let input = parse_ymd("2535-01-01").unwrap();
+        let output = convert(input, &Calendar::Shahanshahi, &Calendar::Gregorian, false).unwrap();
+        assert_eq!((output.year, output.month, output.day), (1976, 3, 21));
+    }
+
+    #[test]
+    fn convert_rejects_out_of_era_without_proleptic() {
+        let input = parse_ymd("1996-03-20").unwrap();
+        assert!(convert(input, &Calendar::Gregorian, &Calendar::Shahanshahi, false).is_err());
+    }
+
+    #[test]
+    fn convert_accepts_out_of_era_with_proleptic() {
+        let input = parse_ymd("1996-03-20").unwrap();
+        let output = convert(input, &Calendar::Gregorian, &Calendar::Shahanshahi, true).unwrap();
+        assert_eq!((output.year, output.month, output.day), (2555, 1, 1));
+    }
+}
