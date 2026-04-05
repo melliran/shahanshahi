@@ -2,6 +2,8 @@
 
 This document describes how we build and ship **shahanshahi** as a Rust library. It complements [`VISION.md`](./VISION.md) (why the project exists) and [`CONTRIBUTING.md`](../CONTRIBUTING.md) (day-to-day contribution rules).
 
+The workspace also ships **`shahanshahi-cli`** ([`crates/shahanshahi-cli`](../crates/shahanshahi-cli)), a `shahanshahi` binary documented in [`CLI.md`](./CLI.md). It versions separately from the library. [`release-plz.toml`](../release-plz.toml) lists only **`shahanshahi`** until the [CLI tooling](https://github.com/melliran/shahanshahi/milestone/2) milestone is done and you add **`shahanshahi-cli`** for automated releases. Until then, log CLI work under **`[Unreleased]`** in [`CHANGELOG-CLI.md`](../CHANGELOG-CLI.md). See [Multi-crate releases](#multi-crate-releases-shahanshahi-and-shahanshahi-cli).
+
 ## What we are building
 
 - **Shape:** A **Rust library crate** (`crates/shahanshahi`) consumed via Cargo / crates.io — not a hosted “production service” with its own runtime SLA.
@@ -19,7 +21,7 @@ GitHub Actions run on every push and pull request to `main`:
 | [rustfmt](../.github/workflows/rustfmt.yml) | `cargo fmt --check` — consistent formatting. |
 | [clippy](../.github/workflows/clippy.yml) | `cargo clippy … -D warnings` — no Clippy warnings. |
 | [test](../.github/workflows/test.yml) | `cargo test --workspace --all-features` — tests pass (including `proleptic`). |
-| [crate package](../.github/workflows/crate-package.yml) | `cargo publish -p shahanshahi --dry-run` — the crate **packages and builds** as crates.io would. |
+| [crate package](../.github/workflows/crate-package.yml) | `cargo publish -p shahanshahi --dry-run` and `cargo publish -p shahanshahi-cli --dry-run` — each crate **packages and builds** as crates.io would. |
 | [audit](../.github/workflows/audit.yml) | **`cargo audit`** (RustSec) + **`cargo deny check`** (advisories, licenses, sources) on every PR and weekly on a schedule. |
 | [release-plz](../.github/workflows/release-plz.yml) | On push to **`main`**: maintain a **draft release PR** (version + changelog). **Publish** job runs only if repo variable **`RELEASE_PLZ_PUBLISH`** is `true` and **`CARGO_REGISTRY_TOKEN`** is set. |
 
@@ -52,11 +54,24 @@ We follow **[Semantic Versioning 2.0.0](https://semver.org/)** as interpreted by
 | **0.*.* (current)** | **API may break** between minor releases while the spec and public surface are still settling. Prefer documenting notable breaks in [`CHANGELOG.md`](../CHANGELOG.md). Patches are for fixes and non-breaking additions when possible. |
 | **1.0.0 (future)** | **Stable API** commitment: follow SemVer strictly for the public API. Breaking changes require a new **major** version. |
 
-**Source of truth:** The workspace version in the root [`Cargo.toml`](../Cargo.toml) (`[workspace.package] version`) is the crate version. **Do not** diverge the published version from that field.
+**Source of truth (library):** Crates that set `version.workspace = true` (today: **`shahanshahi`**) take their version from the root [`Cargo.toml`](../Cargo.toml) (`[workspace.package] version`). **Do not** diverge the published library version from that field.
+
+**Source of truth (CLI):** **`shahanshahi-cli`** keeps its own `version` in [`crates/shahanshahi-cli/Cargo.toml`](../crates/shahanshahi-cli/Cargo.toml). Bump it on its own semver cadence; it does **not** track `[workspace.package] version`.
 
 **MSRV:** `rust-version` in `Cargo.toml` is the **minimum supported Rust version**. **Raising MSRV** is a **semver-visible** change: treat it as at least a **minor** bump in `0.x` (and a **minor** bump post-1.0), and record it in the changelog.
 
-**Git tags:** When publishing to crates.io, use an **annotated tag** `vX.Y.Z` whose numbers **match** `Cargo.toml` at that commit (e.g. `v0.1.0` ↔ `version = "0.1.0"`).
+**Git tags:** When publishing to crates.io, use an **annotated tag** `vX.Y.Z` whose numbers **match** `Cargo.toml` at that commit (e.g. `v0.1.0` ↔ `version = "0.1.0"`). If you publish **both** crates from one release train, use **disambiguated** tags (e.g. `shahanshahi-v0.2.1` and `shahanshahi-cli-v0.1.0`) or separate release commits per crate so tags stay unambiguous.
+
+### Multi-crate releases (`shahanshahi` and `shahanshahi-cli`)
+
+| Crate | Version field | Changelog |
+|-------|----------------|-----------|
+| **`shahanshahi`** | Root [`Cargo.toml`](../Cargo.toml) `[workspace.package] version` | [`CHANGELOG.md`](../CHANGELOG.md) |
+| **`shahanshahi-cli`** | [`crates/shahanshahi-cli/Cargo.toml`](../crates/shahanshahi-cli/Cargo.toml) `version` | [`CHANGELOG-CLI.md`](../CHANGELOG-CLI.md) |
+
+**First CLI release (after milestone [CLI tooling](https://github.com/melliran/shahanshahi/milestone/2) closes):** ship **`shahanshahi-cli` 0.1.0** and bump **`shahanshahi` to 0.2.1** so [`CHANGELOG.md`](../CHANGELOG.md) can mention the binary on crates.io. In [`crates/shahanshahi-cli/Cargo.toml`](../crates/shahanshahi-cli/Cargo.toml), set the `shahanshahi` dependency to `version = "0.2.1"` next to `path` (keep that in sync with the workspace library version whenever you publish). Add `[[package]] name = "shahanshahi-cli"` / `changelog_path = "CHANGELOG-CLI.md"` to [`release-plz.toml`](../release-plz.toml) if you want release-plz to manage the CLI; otherwise publish by hand.
+
+**Path + version:** `cargo publish` requires a crates.io **`version`** on `shahanshahi` alongside **`path`**; CI’s `cargo publish -p shahanshahi-cli --dry-run` checks that the manifest is valid.
 
 ## Release process (crates.io)
 
@@ -89,7 +104,7 @@ Error from GitHub’s API often looks like:
 
 #### Why a bot PR appears
 
-Every push to `main` triggers the **`release-plz-pr`** job. Release-plz compares the latest crates.io version with the commits since that release, infers the next semver bump from Conventional Commit prefixes, and opens (or updates) a **draft** PR on a `release-plz-*` branch with the proposed `Cargo.toml` version and [`CHANGELOG.md`](../CHANGELOG.md) edits. The PR is labelled `chore` and configured in [`release-plz.toml`](../release-plz.toml).
+Every push to `main` triggers the **`release-plz-pr`** job. Release-plz compares the latest crates.io version with the commits since that release, infers the next semver bump from Conventional Commit prefixes, and opens (or updates) a **draft** PR on a `release-plz-*` branch with the proposed `Cargo.toml` version and [`CHANGELOG.md`](../CHANGELOG.md) edits for packages listed in [`release-plz.toml`](../release-plz.toml) (today: **`shahanshahi`** only). The PR is labelled `chore`.
 
 This is **normal and expected** — the bot PR is a convenience, not a mandate to merge immediately. It stays in draft until a maintainer is ready to release.
 
@@ -155,8 +170,9 @@ Tracking checklist: [issue #8](https://github.com/melliran/shahanshahi/issues/8)
 If release-plz is disabled or unsuitable for a one-off:
 
 1. Land changes on `main` with CI green.
-2. Update [`CHANGELOG.md`](../CHANGELOG.md) and bump `version` in the root [`Cargo.toml`](../Cargo.toml).
-3. Tag `vX.Y.Z` and push; run `cargo publish -p shahanshahi`; create the **GitHub Release**.
+2. **Library:** update [`CHANGELOG.md`](../CHANGELOG.md) and bump `version` in the root [`Cargo.toml`](../Cargo.toml).
+3. **CLI (first release):** update [`CHANGELOG-CLI.md`](../CHANGELOG-CLI.md), bump **`shahanshahi-cli`** (e.g. **0.1.0**), set `shahanshahi = { path = "...", version = "…" }` to the library version you publish, and add **`shahanshahi-cli`** to `release-plz.toml` if you want the bot to handle it.
+4. Tag (see [Git tags](#versioning-rules) above); run `cargo publish -p shahanshahi` and/or `cargo publish -p shahanshahi-cli`; create the **GitHub Release(s)**.
 
 ## Summary
 
@@ -164,7 +180,7 @@ If release-plz is disabled or unsuitable for a one-off:
 |-------|------|
 | Spec vs code | Spec + golden dates lead; code implements. |
 | CI | rustfmt, clippy (`-D warnings`), test, packaging dry-run, audit + deny on each PR (and weekly audit schedule). |
-| Version | Root `Cargo.toml` `version`; SemVer; `0.x` allows API evolution with changelog discipline. |
+| Version | Library: root `Cargo.toml` `[workspace.package] version`. CLI: `crates/shahanshahi-cli/Cargo.toml`. SemVer per surface; first CLI drop pairs **`shahanshahi-cli` 0.1.0** with **`shahanshahi` 0.2.1** — see [Multi-crate releases](#multi-crate-releases-shahanshahi-and-shahanshahi-cli). |
 | MSRV | Documented in `Cargo.toml`; bump ⇒ at least minor semver bump. |
 | Tags | `vX.Y.Z` matches crate version at release. |
 | Security | Report vulnerabilities privately per [SECURITY.md](../SECURITY.md), not public issues. |
