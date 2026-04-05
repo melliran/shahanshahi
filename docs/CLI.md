@@ -4,6 +4,12 @@ The workspace crate [`crates/shahanshahi-cli`](../crates/shahanshahi-cli) instal
 
 The CLI crate is versioned **independently** of the library (starts at **0.1.0**); its public contract is flags and I/O formats, not the Rust API.
 
+## Releases and changelog
+
+- **Changelog:** [`CHANGELOG-CLI.md`](../CHANGELOG-CLI.md) (Keep a Changelog; SemVer applies to the CLI surface). While the [**CLI tooling**](https://github.com/melliran/shahanshahi/milestone/2) milestone is **open**, add entries under **`[Unreleased]`** only.
+- **Registry / release-plz:** There is **no** crates.io release and **no** `shahanshahi-cli` entry in [`release-plz.toml`](../release-plz.toml) until maintainers **close that milestone** and intentionally ship the CLI (then add the package to `release-plz.toml` and/or `cargo publish -p shahanshahi-cli`). Until then use `cargo install --path` or `cargo run`. Details: [`docs/ENGINEERING.md`](./ENGINEERING.md) → *Multi-crate releases*.
+- **Library-only “optics” release:** Shipping the CLI does **not** require a new **`shahanshahi`** version under strict SemVer; an **optional** library patch (e.g. **0.2.1**) is only if you want the main [`CHANGELOG.md`](../CHANGELOG.md) to mention the new binary for registry readers.
+
 ## Install
 
 From a clone of this repository:
@@ -18,7 +24,7 @@ During development you can run without installing:
 cargo run -p shahanshahi-cli -- <ARGS>
 ```
 
-Publishing to crates.io is tracked separately from the library; until then, use `--path` or `cargo run`.
+Until the first **`shahanshahi-cli`** publish from the registry, prefer `cargo install --path` or `cargo run` (see *Releases and changelog* above).
 
 ## Command overview
 
