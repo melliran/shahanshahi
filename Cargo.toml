@@ -1,6 +1,6 @@
 [workspace]
 resolver = "2"
-members = ["crates/shahanshahi"]
+members = ["crates/shahanshahi", "crates/shahanshahi-cli"]
 
 [workspace.package]
 version = "0.2.0"
