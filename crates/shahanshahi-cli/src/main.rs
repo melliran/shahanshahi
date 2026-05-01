@@ -24,14 +24,16 @@ fn run() -> Result<()> {
 
 fn run_convert(args: ConvertArgs) -> Result<()> {
     let (from, to) = resolve_direction(args.from, args.to)?;
+    // Month names only apply to Shahanshahi output; silently no-op for Gregorian.
+    let use_month_names = args.month_names && to == Calendar::Shahanshahi;
 
     match args.date.as_deref() {
         Some(s) if s != "-" => {
             let input = convert::parse_ymd(s)?;
             let output = convert::convert(input, &from, &to, args.proleptic)?;
-            format::write_single(&args.format, &output)
+            format::write_single(&args.format, &output, use_month_names)
         }
-        _ => format::run_batch(&args.format, &from, &to, args.proleptic),
+        _ => format::run_batch(&args.format, &from, &to, args.proleptic, use_month_names),
     }
 }
 
