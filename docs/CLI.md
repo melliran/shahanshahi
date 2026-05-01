@@ -82,6 +82,27 @@ All numeric fields are integers consistent with the active `--from` / `--to` cal
 - **`0`** — success.
 - **`1`** — conversion or parse error (message on stderr).
 
+## Shell completions
+
+Generate and install a completion script with the `completions` subcommand:
+
+```bash
+# bash
+shahanshahi completions bash > ~/.local/share/bash-completion/completions/shahanshahi
+
+# zsh (add the directory to $fpath if not already there)
+shahanshahi completions zsh > ~/.config/zsh/completions/_shahanshahi
+
+# fish
+shahanshahi completions fish > ~/.config/fish/completions/shahanshahi.fish
+
+# PowerShell
+shahanshahi completions powershell > shahanshahi.ps1
+# then add `. ./shahanshahi.ps1` to your $PROFILE
+```
+
+After installing, restart your shell (or source the file) to activate tab-completion for subcommands, flags, and calendar names.
+
 ## Examples
 
 ```bash
@@ -91,6 +112,10 @@ shahanshahi convert 1976-03-21
 
 shahanshahi convert --from sh --to g 2535-01-01
 # 1976-03-21
+
+# Human-readable month names
+shahanshahi convert 1976-03-21 --month-names
+# 1 Farvardin 2535
 
 # Batch from stdin
 printf "1976-03-21\n1977-03-21\n" | shahanshahi convert

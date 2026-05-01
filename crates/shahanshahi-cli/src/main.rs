@@ -3,9 +3,11 @@ mod convert;
 mod format;
 
 use anyhow::{bail, Result};
-use clap::Parser;
+use clap::{CommandFactory, Parser};
+use clap_complete::generate;
+use std::io::{self, Write};
 
-use cli::{Calendar, Cli, Command, ConvertArgs};
+use cli::{Calendar, Cli, Command, CompletionsArgs, ConvertArgs};
 
 fn main() {
     if let Err(err) = run() {
@@ -19,6 +21,7 @@ fn run() -> Result<()> {
 
     match cli.command {
         Command::Convert(args) => run_convert(args),
+        Command::Completions(args) => run_completions(args),
     }
 }
 
@@ -37,6 +40,16 @@ fn run_convert(args: ConvertArgs) -> Result<()> {
     }
 }
 
+fn run_completions(args: CompletionsArgs) -> Result<()> {
+    run_completions_into(args, &mut io::stdout())
+}
+
+fn run_completions_into(args: CompletionsArgs, out: &mut dyn Write) -> Result<()> {
+    let mut cmd = Cli::command();
+    generate(args.shell, &mut cmd, "shahanshahi", out);
+    Ok(())
+}
+
 /// Infer the missing direction when only one of --from / --to is given.
 /// Default (neither specified): Gregorian → Shahanshahi.
 fn resolve_direction(from: Option<Calendar>, to: Option<Calendar>) -> Result<(Calendar, Calendar)> {
@@ -52,5 +65,50 @@ fn resolve_direction(from: Option<Calendar>, to: Option<Calendar>) -> Result<(Ca
             Ok((Calendar::Shahanshahi, Calendar::Gregorian))
         }
         (None, Some(Calendar::Shahanshahi)) => Ok((Calendar::Gregorian, Calendar::Shahanshahi)),
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use clap_complete::Shell;
+
+    fn completions_for(shell: Shell) -> String {
+        let args = cli::CompletionsArgs { shell };
+        let mut buf = Vec::new();
+        run_completions_into(args, &mut buf).unwrap();
+        String::from_utf8(buf).unwrap()
+    }
+
+    #[test]
+    fn completions_bash_non_empty() {
+        let out = completions_for(Shell::Bash);
+        assert!(!out.is_empty());
+        assert!(out.contains("shahanshahi"));
+        assert!(out.contains("convert"));
+    }
+
+    #[test]
+    fn completions_zsh_non_empty() {
+        let out = completions_for(Shell::Zsh);
+        assert!(!out.is_empty());
+        assert!(out.contains("shahanshahi"));
+        assert!(out.contains("convert"));
+    }
+
+    #[test]
+    fn completions_fish_non_empty() {
+        let out = completions_for(Shell::Fish);
+        assert!(!out.is_empty());
+        assert!(out.contains("shahanshahi"));
+        assert!(out.contains("convert"));
+    }
+
+    #[test]
+    fn completions_powershell_non_empty() {
+        let out = completions_for(Shell::PowerShell);
+        assert!(!out.is_empty());
+        assert!(out.contains("shahanshahi"));
+        assert!(out.contains("convert"));
     }
 }
