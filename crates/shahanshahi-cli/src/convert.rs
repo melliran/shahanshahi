@@ -173,10 +173,18 @@ mod tests {
     #[test]
     fn month_name_all_twelve() {
         let expected = [
-            "Farvardin", "Ordibehesht", "Khordad",
-            "Tir",       "Mordad",      "Shahrivar",
-            "Mehr",      "Aban",        "Azar",
-            "Dey",       "Bahman",      "Esfand",
+            "Farvardin",
+            "Ordibehesht",
+            "Khordad",
+            "Tir",
+            "Mordad",
+            "Shahrivar",
+            "Mehr",
+            "Aban",
+            "Azar",
+            "Dey",
+            "Bahman",
+            "Esfand",
         ];
         for (i, name) in expected.iter().enumerate() {
             assert_eq!(month_name(i as u8 + 1), *name);
@@ -191,13 +199,21 @@ mod tests {
 
     #[test]
     fn format_named_produces_day_name_year() {
-        let d = DateTriple { year: 2535, month: 1, day: 1 };
+        let d = DateTriple {
+            year: 2535,
+            month: 1,
+            day: 1,
+        };
         assert_eq!(format_named(&d), "1 Farvardin 2535");
     }
 
     #[test]
     fn format_named_last_month() {
-        let d = DateTriple { year: 2535, month: 12, day: 29 };
+        let d = DateTriple {
+            year: 2535,
+            month: 12,
+            day: 29,
+        };
         assert_eq!(format_named(&d), "29 Esfand 2535");
     }
 }

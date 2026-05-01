@@ -174,12 +174,7 @@ fn run_json_batch(
     Ok(())
 }
 
-fn run_csv_batch(
-    from: &Calendar,
-    to: &Calendar,
-    proleptic: bool,
-    month_names: bool,
-) -> Result<()> {
+fn run_csv_batch(from: &Calendar, to: &Calendar, proleptic: bool, month_names: bool) -> Result<()> {
     let stdin = io::stdin();
     let mut rdr = csv::Reader::from_reader(stdin.lock());
 
