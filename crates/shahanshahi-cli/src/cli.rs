@@ -35,6 +35,11 @@ pub struct ConvertArgs {
     #[arg(long)]
     pub proleptic: bool,
 
+    /// Display Shahanshahi month names instead of numeric month (e.g. "1 Farvardin 2535").
+    /// No-op when the output calendar is Gregorian.
+    #[arg(long)]
+    pub month_names: bool,
+
     /// Date in YYYY-MM-DD format (omit or pass "-" for stdin).
     pub date: Option<String>,
 }
