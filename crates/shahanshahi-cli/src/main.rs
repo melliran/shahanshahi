@@ -3,9 +3,11 @@ mod convert;
 mod format;
 
 use anyhow::{bail, Result};
-use clap::Parser;
+use clap::{CommandFactory, Parser};
+use clap_complete::generate;
+use std::io;
 
-use cli::{Calendar, Cli, Command, ConvertArgs};
+use cli::{Calendar, Cli, Command, CompletionsArgs, ConvertArgs};
 
 fn main() {
     if let Err(err) = run() {
@@ -19,6 +21,7 @@ fn run() -> Result<()> {
 
     match cli.command {
         Command::Convert(args) => run_convert(args),
+        Command::Completions(args) => run_completions(args),
     }
 }
 
@@ -35,6 +38,12 @@ fn run_convert(args: ConvertArgs) -> Result<()> {
         }
         _ => format::run_batch(&args.format, &from, &to, args.proleptic, use_month_names),
     }
+}
+
+fn run_completions(args: CompletionsArgs) -> Result<()> {
+    let mut cmd = Cli::command();
+    generate(args.shell, &mut cmd, "shahanshahi", &mut io::stdout());
+    Ok(())
 }
 
 /// Infer the missing direction when only one of --from / --to is given.

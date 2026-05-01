@@ -1,4 +1,5 @@
 use clap::{Args, Parser, Subcommand, ValueEnum};
+use clap_complete::Shell;
 
 #[derive(Parser)]
 #[command(
@@ -15,6 +16,20 @@ pub struct Cli {
 pub enum Command {
     /// Convert dates between Shahanshahi and Gregorian calendars.
     Convert(ConvertArgs),
+
+    /// Print a shell completion script to stdout.
+    ///
+    /// Pipe the output into your shell's completions directory, e.g.:
+    ///   shahanshahi completions bash > ~/.local/share/bash-completion/completions/shahanshahi
+    ///   shahanshahi completions zsh  > ~/.config/zsh/completions/_shahanshahi
+    ///   shahanshahi completions fish > ~/.config/fish/completions/shahanshahi.fish
+    Completions(CompletionsArgs),
+}
+
+#[derive(Args)]
+pub struct CompletionsArgs {
+    /// Shell to generate completions for.
+    pub shell: Shell,
 }
 
 #[derive(Args)]
