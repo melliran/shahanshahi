@@ -58,6 +58,8 @@ We follow **[Semantic Versioning 2.0.0](https://semver.org/)** as interpreted by
 
 **Source of truth (CLI):** **`shahanshahi-cli`** keeps its own `version` in [`crates/shahanshahi-cli/Cargo.toml`](../crates/shahanshahi-cli/Cargo.toml). Bump it on its own semver cadence; it does **not** track `[workspace.package] version`.
 
+**Why independent versioning for the CLI?** A library's public contract is its Rust API — the types, traits, and functions downstream crates depend on. A CLI's public contract is its argument interface: subcommand names, flag spellings, exit codes, and output formats. These evolve at different rates and for different reasons. Renaming a flag is a breaking change for CLI users but invisible to library consumers; changing a type signature is the reverse. Coupling both crates under one workspace version would force unnecessary semver bumps on both sides. Both crates still share `edition`, `rust-version`, `license`, and `repository` from `[workspace.package]` — only `version` is kept independent. This was decided in [issue #47](https://github.com/melliran/shahanshahi/issues/47).
+
 **MSRV:** `rust-version` in `Cargo.toml` is the **minimum supported Rust version**. **Raising MSRV** is a **semver-visible** change: treat it as at least a **minor** bump in `0.x` (and a **minor** bump post-1.0), and record it in the changelog.
 
 **Git tags:** When publishing to crates.io, use an **annotated tag** `vX.Y.Z` whose numbers **match** `Cargo.toml` at that commit (e.g. `v0.1.0` ↔ `version = "0.1.0"`). If you publish **both** crates from one release train, use **disambiguated** tags (e.g. `shahanshahi-v0.2.1` and `shahanshahi-cli-v0.1.0`) or separate release commits per crate so tags stay unambiguous.
