@@ -74,6 +74,36 @@ pub fn format_ymd(d: &DateTriple) -> String {
     format!("{:04}-{:02}-{:02}", d.year, d.month, d.day)
 }
 
+/// Returns the English transliteration of the Shahanshahi month name for a
+/// 1-based month index (1 = Farvardin … 12 = Esfand), as fixed by the 1925
+/// Iranian calendar law and listed in SPEC.md § Months.
+pub fn month_name(month: u8) -> &'static str {
+    const NAMES: [&str; 12] = [
+        "Farvardin",
+        "Ordibehesht",
+        "Khordad",
+        "Tir",
+        "Mordad",
+        "Shahrivar",
+        "Mehr",
+        "Aban",
+        "Azar",
+        "Dey",
+        "Bahman",
+        "Esfand",
+    ];
+    match month {
+        1..=12 => NAMES[(month - 1) as usize],
+        _ => "?",
+    }
+}
+
+/// Formats a date as `"D MonthName YYYY"` (e.g. `"1 Farvardin 2535"`).
+/// Intended for Shahanshahi output with `--month-names`.
+pub fn format_named(d: &DateTriple) -> String {
+    format!("{} {} {}", d.day, month_name(d.month), d.year)
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -138,5 +168,36 @@ mod tests {
         let input = parse_ymd("1996-03-20").unwrap();
         let output = convert(input, &Calendar::Gregorian, &Calendar::Shahanshahi, true).unwrap();
         assert_eq!((output.year, output.month, output.day), (2555, 1, 1));
+    }
+
+    #[test]
+    fn month_name_all_twelve() {
+        let expected = [
+            "Farvardin", "Ordibehesht", "Khordad",
+            "Tir",       "Mordad",      "Shahrivar",
+            "Mehr",      "Aban",        "Azar",
+            "Dey",       "Bahman",      "Esfand",
+        ];
+        for (i, name) in expected.iter().enumerate() {
+            assert_eq!(month_name(i as u8 + 1), *name);
+        }
+    }
+
+    #[test]
+    fn month_name_out_of_range_returns_fallback() {
+        assert_eq!(month_name(0), "?");
+        assert_eq!(month_name(13), "?");
+    }
+
+    #[test]
+    fn format_named_produces_day_name_year() {
+        let d = DateTriple { year: 2535, month: 1, day: 1 };
+        assert_eq!(format_named(&d), "1 Farvardin 2535");
+    }
+
+    #[test]
+    fn format_named_last_month() {
+        let d = DateTriple { year: 2535, month: 12, day: 29 };
+        assert_eq!(format_named(&d), "29 Esfand 2535");
     }
 }
