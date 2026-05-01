@@ -50,6 +50,24 @@ fn run_completions_into(args: CompletionsArgs, out: &mut dyn Write) -> Result<()
     Ok(())
 }
 
+/// Infer the missing direction when only one of --from / --to is given.
+/// Default (neither specified): Gregorian → Shahanshahi.
+fn resolve_direction(from: Option<Calendar>, to: Option<Calendar>) -> Result<(Calendar, Calendar)> {
+    match (from, to) {
+        (Some(f), Some(t)) if f == t => {
+            bail!("--from and --to must specify different calendars");
+        }
+        (Some(f), Some(t)) => Ok((f, t)),
+        (Some(Calendar::Gregorian), None) | (None, None) => {
+            Ok((Calendar::Gregorian, Calendar::Shahanshahi))
+        }
+        (Some(Calendar::Shahanshahi), None) | (None, Some(Calendar::Gregorian)) => {
+            Ok((Calendar::Shahanshahi, Calendar::Gregorian))
+        }
+        (None, Some(Calendar::Shahanshahi)) => Ok((Calendar::Gregorian, Calendar::Shahanshahi)),
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -92,23 +110,5 @@ mod tests {
         assert!(!out.is_empty());
         assert!(out.contains("shahanshahi"));
         assert!(out.contains("convert"));
-    }
-}
-
-/// Infer the missing direction when only one of --from / --to is given.
-/// Default (neither specified): Gregorian → Shahanshahi.
-fn resolve_direction(from: Option<Calendar>, to: Option<Calendar>) -> Result<(Calendar, Calendar)> {
-    match (from, to) {
-        (Some(f), Some(t)) if f == t => {
-            bail!("--from and --to must specify different calendars");
-        }
-        (Some(f), Some(t)) => Ok((f, t)),
-        (Some(Calendar::Gregorian), None) | (None, None) => {
-            Ok((Calendar::Gregorian, Calendar::Shahanshahi))
-        }
-        (Some(Calendar::Shahanshahi), None) | (None, Some(Calendar::Gregorian)) => {
-            Ok((Calendar::Shahanshahi, Calendar::Gregorian))
-        }
-        (None, Some(Calendar::Shahanshahi)) => Ok((Calendar::Gregorian, Calendar::Shahanshahi)),
     }
 }
