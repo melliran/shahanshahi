@@ -1,6 +1,6 @@
 # Command-line tool (`shahanshahi-cli`)
 
-The workspace crate [`crates/shahanshahi-cli`](../crates/shahanshahi-cli) installs a binary named **`shahanshahi`**. It exposes the same calendar arithmetic as the [`shahanshahi`](../crates/shahanshahi) library (no duplicate conversion logic).
+The workspace crate [`crates/shahanshahi-cli`](../crates/shahanshahi-cli) installs two binaries: **`shahanshahi`** (full name) and **`shcal`** (short alias). Both expose the same calendar arithmetic as the [`shahanshahi`](../crates/shahanshahi) library (no duplicate conversion logic).
 
 The CLI crate is versioned **independently** of the library (starts at **0.1.0**); its public contract is flags and I/O formats, not the Rust API.
 
@@ -84,11 +84,13 @@ All numeric fields are integers consistent with the active `--from` / `--to` cal
 
 ## Shell completions
 
-Generate and install a completion script with the `completions` subcommand:
+Generate and install a completion script with the `completions` subcommand. Run the command under the binary name you use daily — each binary generates completions for itself:
 
 ```bash
 # bash
 shahanshahi completions bash > ~/.local/share/bash-completion/completions/shahanshahi
+# or, if you use shcal:
+shcal completions bash > ~/.local/share/bash-completion/completions/shcal
 
 # zsh (add the directory to $fpath if not already there)
 shahanshahi completions zsh > ~/.config/zsh/completions/_shahanshahi
