@@ -42,7 +42,7 @@ The [`shahanshahi`](./crates/shahanshahi) crate implements **spec version 2** of
 | `release-plz.toml` | Release automation config ([release-plz](https://release-plz.dev/)) |
 | `SECURITY.md` | How to report vulnerabilities privately |
 | `crates/shahanshahi` | Library crate (API to grow with the spec) |
-| `crates/shahanshahi-cli` | Command-line binary `shahanshahi` (batch / pipe-friendly conversion) |
+| `crates/shahanshahi-cli` | Command-line binaries `shahanshahi` and `shcal` (batch / pipe-friendly conversion) |
 | `crates/shahanshahi/examples/` | Runnable examples (`cargo run -p shahanshahi --example …`) |
 | `docs/CLI.md` | CLI install, flags, and text / JSON / CSV formats |
 

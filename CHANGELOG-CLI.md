@@ -13,3 +13,4 @@ The library lives in [`CHANGELOG.md`](./CHANGELOG.md).
 ### Added
 
 - `shahanshahi convert` — text, JSON, and CSV; `--from` / `--to`; `--proleptic`. See [`docs/CLI.md`](./docs/CLI.md). ([#6](https://github.com/melliran/shahanshahi/issues/6))
+- `shcal` short binary alias installed alongside `shahanshahi`; completions subcommand generates scripts for whichever name you invoke. ([#46](https://github.com/melliran/shahanshahi/issues/46))
