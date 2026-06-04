@@ -8,6 +8,13 @@ as described in [`docs/ENGINEERING.md`](./docs/ENGINEERING.md).
 
 ## [Unreleased]
 
+## [0.2.1](https://github.com/melliran/shahanshahi/compare/shahanshahi-v0.2.0...shahanshahi-v0.2.1) - 2026-06-04
+
+### Added
+
+- *(cli)* shcal short binary alias ([#60](https://github.com/melliran/shahanshahi/pull/60))
+- *(cli)* add shahanshahi-cli crate for batch/pipe-friendly conversion ([#48](https://github.com/melliran/shahanshahi/pull/48))
+
 ### Added
 
 - `shahanshahi-cli` / `shahanshahi` binary for shell conversion ([`docs/CLI.md`](./docs/CLI.md), [#6](https://github.com/melliran/shahanshahi/issues/6)). Intended to ship with **`shahanshahi` 0.2.1** alongside **`shahanshahi-cli` 0.1.0** after the [CLI tooling](https://github.com/melliran/shahanshahi/milestone/2) milestone.
