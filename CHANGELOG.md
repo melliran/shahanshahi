@@ -8,10 +8,6 @@ as described in [`docs/ENGINEERING.md`](./docs/ENGINEERING.md).
 
 ## [Unreleased]
 
-### Added
-
-- `shahanshahi-cli` / `shahanshahi` binary for shell conversion ([`docs/CLI.md`](./docs/CLI.md), [#6](https://github.com/melliran/shahanshahi/issues/6)). Intended to ship with **`shahanshahi` 0.2.1** alongside **`shahanshahi-cli` 0.1.0** after the [CLI tooling](https://github.com/melliran/shahanshahi/milestone/2) milestone.
-
 ## [0.2.0] - 2026-03-22
 
 ### Added
