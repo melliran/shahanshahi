@@ -1,0 +1,25 @@
+[package]
+name = "shahanshahi-wasm"
+description = "WebAssembly bindings for the Shahanshahi (Imperial Iranian) calendar library"
+version = "0.1.0"
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+repository.workspace = true
+readme = "README.md"
+
+[lib]
+crate-type = ["cdylib", "rlib"]
+
+[dependencies]
+wasm-bindgen = "0.2"
+serde = { version = "1", features = ["derive"] }
+serde-wasm-bindgen = "0.6"
+shahanshahi = { path = "../shahanshahi", version = "0.2.0", default-features = false, features = ["std"] }
+
+[dev-dependencies]
+wasm-bindgen-test = "0.3"
+js-sys = "0.3"
+
+[lints.rust]
+unsafe_code = "forbid"
