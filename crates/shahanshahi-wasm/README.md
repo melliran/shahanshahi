@@ -7,15 +7,15 @@ Built with [`wasm-bindgen`](https://github.com/rustwasm/wasm-bindgen) and [`wasm
 ## Install (npm)
 
 ```bash
-npm install shahanshahi-wasm   # once published
+npm install @melliran/shahanshahi-wasm
 ```
 
 Or build from source:
 
 ```bash
-wasm-pack build --target web crates/shahanshahi-wasm      # ESM / browser
-wasm-pack build --target bundler crates/shahanshahi-wasm  # webpack / vite
-wasm-pack build --target nodejs crates/shahanshahi-wasm   # Node.js
+wasm-pack build --scope melliran --target web crates/shahanshahi-wasm      # ESM / browser
+wasm-pack build --scope melliran --target bundler crates/shahanshahi-wasm  # webpack / vite
+wasm-pack build --scope melliran --target nodejs crates/shahanshahi-wasm   # Node.js
 ```
 
 ## API
@@ -25,7 +25,7 @@ All functions are synchronous. Invalid input throws a JavaScript `Error`.
 ### `gregorianToShahanshahi(year, month, day)`
 
 ```js
-import init, { gregorianToShahanshahi } from './shahanshahi_wasm.js';
+import init, { gregorianToShahanshahi } from '@melliran/shahanshahi-wasm';
 await init();
 
 gregorianToShahanshahi(1976, 3, 21);

@@ -23,4 +23,4 @@ jobs:
       - name: Install wasm-pack
         run: curl https://rustwasm.github.io/wasm-pack/installer/init.sh -sSf | sh
       - name: Test (wasm32, Node.js)
-        run: wasm-pack test --node crates/shahanshahi-wasm
+        run: wasm-pack test --node --scope melliran crates/shahanshahi-wasm
