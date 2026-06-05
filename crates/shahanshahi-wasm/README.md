@@ -55,6 +55,9 @@ isShahanshahiLeapYear(2535); // → false
 ### Error handling
 
 ```js
+import init, { gregorianToShahanshahi } from '@melliran/shahanshahi-wasm';
+await init();
+
 try {
   gregorianToShahanshahi(1976, 13, 1); // month 13 is invalid
 } catch (e) {
