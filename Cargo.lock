@@ -425,7 +425,7 @@ dependencies = [
 
 [[package]]
 name = "shahanshahi"
-version = "0.2.0"
+version = "0.2.1"
 dependencies = [
  "chrono",
  "serde",
@@ -435,7 +435,7 @@ dependencies = [
 
 [[package]]
 name = "shahanshahi-cli"
-version = "0.1.1"
+version = "0.1.2"
 dependencies = [
  "anyhow",
  "clap",
@@ -448,7 +448,7 @@ dependencies = [
 
 [[package]]
 name = "shahanshahi-wasm"
-version = "0.1.0"
+version = "0.1.1"
 dependencies = [
  "js-sys",
  "serde",
