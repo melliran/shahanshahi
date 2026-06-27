@@ -8,6 +8,14 @@ as described in [`docs/ENGINEERING.md`](./docs/ENGINEERING.md).
 
 ## [Unreleased]
 
+## [0.2.1] - 2026-06-27
+
+### Added
+
+- `impl std::fmt::Display` for [`ShahanshahiDate`] and [`GregorianDate`]: formats as `YYYY-MM-DD` (e.g. `2535-01-01`, `1976-03-21`); negative years format as `-YYYY-MM-DD`. Unlocks `.to_string()` and `format!("{}", date)` ([#93](https://github.com/melliran/shahanshahi/pull/93))
+- [`shahanshahi_month_name(month)`](./crates/shahanshahi/src/months.rs) — ASCII romanization of the Shahanshahi month name for a 1-based index (1 = `"Farvardin"` … 12 = `"Esfand"`), returns `Option<&'static str>` ([#95](https://github.com/melliran/shahanshahi/pull/95))
+- [`shahanshahi_month_name_persian(month)`](./crates/shahanshahi/src/months.rs) — Persian script month name (1 = `"فروردین"` … 12 = `"اسفند"`), returns `Option<&'static str>` ([#95](https://github.com/melliran/shahanshahi/pull/95))
+
 ## [0.2.0] - 2026-03-22
 
 ### Added
