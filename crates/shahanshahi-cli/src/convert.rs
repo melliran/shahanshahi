@@ -75,27 +75,10 @@ pub fn format_ymd(d: &DateTriple) -> String {
 }
 
 /// Returns the English transliteration of the Shahanshahi month name for a
-/// 1-based month index (1 = Farvardin … 12 = Esfand), as fixed by the 1925
-/// Iranian calendar law and listed in SPEC.md § Months.
+/// 1-based month index (1 = Farvardin … 12 = Esfand). Delegates to the
+/// library; returns `"?"` for out-of-range input (should not occur in practice).
 pub fn month_name(month: u8) -> &'static str {
-    const NAMES: [&str; 12] = [
-        "Farvardin",
-        "Ordibehesht",
-        "Khordad",
-        "Tir",
-        "Mordad",
-        "Shahrivar",
-        "Mehr",
-        "Aban",
-        "Azar",
-        "Dey",
-        "Bahman",
-        "Esfand",
-    ];
-    match month {
-        1..=12 => NAMES[(month - 1) as usize],
-        _ => "?",
-    }
+    shahanshahi::shahanshahi_month_name(month).unwrap_or("?")
 }
 
 /// Formats a date as `"D MonthName YYYY"` (e.g. `"1 Farvardin 2535"`).
