@@ -117,6 +117,16 @@ impl From<GregorianDateError> for ShahanshahiDateError {
     }
 }
 
+impl fmt::Display for ShahanshahiDate {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        if self.year < 0 {
+            write!(f, "-{:04}-{:02}-{:02}", -self.year, self.month, self.day)
+        } else {
+            write!(f, "{:04}-{:02}-{:02}", self.year, self.month, self.day)
+        }
+    }
+}
+
 impl ShahanshahiDate {
     /// Constructs a date **within the default legal Shahanshahi civil era** only.
     pub fn try_new(year: i32, month: u8, day: u8) -> Result<Self, ShahanshahiDateError> {
@@ -281,6 +291,25 @@ mod tests {
             ShahanshahiDate::try_new(2537, 7, 1),
             Err(ShahanshahiDateError::OutOfLegalEra { .. })
         ));
+    }
+
+    #[test]
+    fn display_basic() {
+        let d = ShahanshahiDate::try_new(2535, 1, 1).unwrap();
+        assert_eq!(d.to_string(), "2535-01-01");
+    }
+
+    #[test]
+    fn display_padding() {
+        let d = ShahanshahiDate::try_new(2535, 6, 10).unwrap();
+        assert_eq!(d.to_string(), "2535-06-10");
+    }
+
+    #[cfg(feature = "proleptic")]
+    #[test]
+    fn display_negative_year() {
+        let d = ShahanshahiDate::try_new_proleptic(-1, 1, 1).unwrap();
+        assert_eq!(d.to_string(), "-0001-01-01");
     }
 
     #[test]
