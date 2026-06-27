@@ -51,6 +51,16 @@ impl fmt::Display for GregorianDateError {
 #[cfg(feature = "std")]
 impl std::error::Error for GregorianDateError {}
 
+impl fmt::Display for GregorianDate {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        if self.year < 0 {
+            write!(f, "-{:04}-{:02}-{:02}", -self.year, self.month, self.day)
+        } else {
+            write!(f, "{:04}-{:02}-{:02}", self.year, self.month, self.day)
+        }
+    }
+}
+
 impl GregorianDate {
     /// Constructs a Gregorian date, rejecting impossible month/day combinations (proleptic calendar).
     pub fn try_new(year: i32, month: u8, day: u8) -> Result<Self, GregorianDateError> {
@@ -114,6 +124,24 @@ fn days_in_gregorian_month(year: i32, month: u8) -> u8 {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn display_basic() {
+        let d = GregorianDate::try_new(1976, 3, 21).unwrap();
+        assert_eq!(d.to_string(), "1976-03-21");
+    }
+
+    #[test]
+    fn display_padding() {
+        let d = GregorianDate::try_new(2000, 1, 5).unwrap();
+        assert_eq!(d.to_string(), "2000-01-05");
+    }
+
+    #[test]
+    fn display_negative_year() {
+        let d = GregorianDate::try_new(-1, 3, 1).unwrap();
+        assert_eq!(d.to_string(), "-0001-03-01");
+    }
 
     #[test]
     fn feb_29_on_leap() {
