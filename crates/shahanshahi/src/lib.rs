@@ -31,6 +31,7 @@ mod convert;
 mod date;
 mod gregorian;
 mod leap;
+mod months;
 mod rata_die;
 
 #[cfg(feature = "chrono")]
@@ -46,6 +47,7 @@ pub use leap::{
     is_shahanshahi_leap_arithmetic, is_solar_hijri_leap_arithmetic,
     shahanshahi_to_hijri_shamsi_year,
 };
+pub use months::{shahanshahi_month_name, shahanshahi_month_name_persian};
 
 /// Tracks which written specification version this build targets.
 ///
