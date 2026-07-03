@@ -177,6 +177,16 @@ impl ShahanshahiDate {
         self.day
     }
 
+    /// Returns the day of the week for this date.
+    ///
+    /// Computed via the Rata Die that drives conversion, so there is no extra algorithm cost.
+    /// Saturday is the first day of the Iranian civil week.
+    pub fn weekday(self) -> crate::Weekday {
+        let g = self.to_gregorian();
+        let rd = crate::rata_die::gregorian_to_rata_die(g.year(), g.month(), g.day());
+        crate::weekday::weekday_from_rata_die(rd)
+    }
+
     /// Converts this Shahanshahi civil date to the **proleptic Gregorian** anchor calendar (SPEC.md),
     /// using **Rata Die** as the internal scale (see `convert` module).
     ///
@@ -317,6 +327,26 @@ mod tests {
         let a = ShahanshahiDate::try_new(2535, 1, 1).unwrap();
         let b = ShahanshahiDate::try_new(2535, 12, 29).unwrap();
         assert!(a < b);
+    }
+
+    #[test]
+    fn weekday_anchor_is_sunday() {
+        // 1 Farvardin 2535 = 1976-03-21 (Gregorian) = Sunday (SPEC anchor).
+        let sh = ShahanshahiDate::try_new(2535, 1, 1).unwrap();
+        assert_eq!(sh.weekday(), crate::Weekday::Sunday);
+    }
+
+    #[test]
+    fn weekday_day_walk() {
+        use crate::Weekday::*;
+        let expected = [
+            Sunday, Monday, Tuesday, Wednesday, Thursday, Friday, Saturday,
+        ];
+        for (i, &day) in expected.iter().enumerate() {
+            let g = crate::GregorianDate::try_new(1976, 3, 21 + i as u8).unwrap();
+            let sh = ShahanshahiDate::try_from_gregorian(g).unwrap();
+            assert_eq!(sh.weekday(), day, "day offset {i}");
+        }
     }
 
     #[test]

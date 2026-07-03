@@ -33,6 +33,7 @@ mod gregorian;
 mod leap;
 mod months;
 mod rata_die;
+mod weekday;
 
 #[cfg(feature = "chrono")]
 mod chrono_compat;
@@ -48,6 +49,7 @@ pub use leap::{
     shahanshahi_to_hijri_shamsi_year,
 };
 pub use months::{shahanshahi_month_name, shahanshahi_month_name_persian};
+pub use weekday::Weekday;
 
 /// Tracks which written specification version this build targets.
 ///
