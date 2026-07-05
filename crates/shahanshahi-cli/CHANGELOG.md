@@ -5,6 +5,14 @@ All notable changes to `shahanshahi-cli` are documented here.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.1.3](https://github.com/melliran/shahanshahi/compare/shahanshahi-cli-v0.1.2...shahanshahi-cli-v0.1.3) - 2026-07-05
+
+### Other
+
+- revert cli/wasm version bumps — library-only release
+- bump cli to 0.1.3 and wasm to 0.1.1; remove continue-on-error
+- *(shahanshahi)* release v0.3.0
+
 ## [0.1.2] - 2026-06-27
 
 ### Changed
