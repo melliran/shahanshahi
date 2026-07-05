@@ -8,6 +8,12 @@ as described in [`docs/ENGINEERING.md`](./docs/ENGINEERING.md).
 
 ## [Unreleased]
 
+## [0.2.2](https://github.com/melliran/shahanshahi/compare/shahanshahi-v0.2.1...shahanshahi-v0.2.2) - 2026-07-05
+
+### Added
+
+- *(shahanshahi)* add Weekday enum and weekday() method ([#75](https://github.com/melliran/shahanshahi/pull/75)) ([#102](https://github.com/melliran/shahanshahi/pull/102))
+
 ## [0.2.1] - 2026-06-27
 
 ### Added
