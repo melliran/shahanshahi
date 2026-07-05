@@ -8,6 +8,14 @@ as described in [`docs/ENGINEERING.md`](./docs/ENGINEERING.md).
 
 ## [Unreleased]
 
+## [0.3.0] - 2026-07-05
+
+### Added
+
+- [`Weekday`](./crates/shahanshahi/src/weekday.rs) enum (Saturday-first, matching the Iranian civil week) with `name_ascii()` (e.g. `"Shanbeh"`), `name_persian()` (e.g. `"شنبه"`), `number_from_saturday()` (0 = Saturday … 6 = Friday), and `impl Display` ([#102](https://github.com/melliran/shahanshahi/pull/102))
+- [`ShahanshahiDate::weekday()`](./crates/shahanshahi/src/date.rs) — returns the day of the week for a Shahanshahi date; derived from the Rata Die already computed during conversion, so no extra algorithm cost ([#102](https://github.com/melliran/shahanshahi/pull/102))
+- [`GregorianDate::weekday()`](./crates/shahanshahi/src/gregorian.rs) — same for Gregorian dates ([#102](https://github.com/melliran/shahanshahi/pull/102))
+
 ## [0.2.1] - 2026-06-27
 
 ### Added

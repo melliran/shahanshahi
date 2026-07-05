@@ -15,7 +15,7 @@ crate-type = ["cdylib", "rlib"]
 wasm-bindgen = "0.2"
 serde = { version = "1", features = ["derive"] }
 serde-wasm-bindgen = "0.6"
-shahanshahi = { path = "../shahanshahi", version = "0.2.0", default-features = false, features = ["std"] }
+shahanshahi = { path = "../shahanshahi", version = "0.3.0", default-features = false, features = ["std"] }
 
 [dev-dependencies]
 wasm-bindgen-test = "0.3"

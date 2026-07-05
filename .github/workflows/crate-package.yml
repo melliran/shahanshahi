@@ -10,10 +10,16 @@ env:
   CARGO_TERM_COLOR: always
 
 jobs:
-  dry-run-publish:
+  dry-run-shahanshahi:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
       - uses: dtolnay/rust-toolchain@stable
       - run: cargo publish -p shahanshahi --dry-run
+
+  dry-run-shahanshahi-cli:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: dtolnay/rust-toolchain@stable
       - run: cargo publish -p shahanshahi-cli --dry-run
