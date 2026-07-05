@@ -20,6 +20,7 @@ The [`shahanshahi`](./crates/shahanshahi) crate implements **spec version 2** of
 
 - **Civil dates:** [`ShahanshahiDate`](./crates/shahanshahi/src/date.rs) (1925 month grid, **Mode A** leap on the underlying Hijri Shamsi year) and [`GregorianDate`](./crates/shahanshahi/src/gregorian.rs) for **bidirectional** conversion via Rata Die.
 - **Legal era by default:** construction rejects dates outside the documented Shahanshahi civil window; enable the **`proleptic`** Cargo feature for [`try_new_proleptic`](./crates/shahanshahi/src/date.rs) when you need the same grid without era enforcement (see SPEC.md).
+- **Day of week:** [`Weekday`](./crates/shahanshahi/src/weekday.rs) enum (Saturday-first, Iranian week order) with Persian and ASCII names; `ShahanshahiDate::weekday()` and `GregorianDate::weekday()` computed from Rata Die at zero extra cost.
 - **Leap helpers:** public arithmetic aligned with SPEC (e.g. [`is_shahanshahi_leap_arithmetic`](./crates/shahanshahi/src/leap.rs)).
 - **Golden tests:** [`data/reference-dates.json`](./data/reference-dates.json) holds vetted Shahanshahi ↔ Gregorian rows with citations; [`crates/shahanshahi/tests/reference_dates.rs`](./crates/shahanshahi/tests/reference_dates.rs) checks them in CI and asserts `spec_id` matches the crate’s [`SPEC_VERSION`](./crates/shahanshahi/src/lib.rs).
 - **Optional ecosystem (Cargo features):** `serde` on date types; `chrono` / `time` conversion helpers; `std` is default and can be disabled for `#![no_std]` (see crate rustdoc **Features**).
