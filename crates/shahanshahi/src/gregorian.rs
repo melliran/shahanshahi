@@ -79,6 +79,14 @@ impl GregorianDate {
         Ok(Self { year, month, day })
     }
 
+    /// Returns the day of the week for this date.
+    ///
+    /// Saturday is the first day of the Iranian civil week.
+    pub fn weekday(self) -> crate::Weekday {
+        let rd = crate::rata_die::gregorian_to_rata_die(self.year, self.month, self.day);
+        crate::weekday::weekday_from_rata_die(rd)
+    }
+
     /// Used when the YMD is already produced by a trusted inverse (`rata_die` → Gregorian).
     #[inline]
     pub(crate) const fn from_ymd_unchecked(year: i32, month: u8, day: u8) -> Self {
@@ -141,6 +149,23 @@ mod tests {
     fn display_negative_year() {
         let d = GregorianDate::try_new(-1, 3, 1).unwrap();
         assert_eq!(d.to_string(), "-0001-03-01");
+    }
+
+    #[test]
+    fn weekday_anchor_is_sunday() {
+        // 1976-03-21 is the SPEC anchor = Sunday.
+        let d = GregorianDate::try_new(1976, 3, 21).unwrap();
+        assert_eq!(d.weekday(), crate::Weekday::Sunday);
+    }
+
+    #[test]
+    fn weekday_saturday_and_friday() {
+        // 1976-03-27 = Saturday (6 days after anchor Sunday).
+        let sat = GregorianDate::try_new(1976, 3, 27).unwrap();
+        assert_eq!(sat.weekday(), crate::Weekday::Saturday);
+        // 1976-03-26 = Friday.
+        let fri = GregorianDate::try_new(1976, 3, 26).unwrap();
+        assert_eq!(fri.weekday(), crate::Weekday::Friday);
     }
 
     #[test]
