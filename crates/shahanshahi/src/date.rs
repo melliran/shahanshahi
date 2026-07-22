@@ -187,6 +187,37 @@ impl ShahanshahiDate {
         crate::weekday::weekday_from_rata_die(rd)
     }
 
+    /// Formats this date using a strftime-style format string.
+    ///
+    /// Recognised specifiers:
+    ///
+    /// | Specifier | Output |
+    /// |-----------|--------|
+    /// | `%Y` | 4-digit year |
+    /// | `%m` | 2-digit month, zero-padded (`01`–`12`) |
+    /// | `%d` | 2-digit day, zero-padded (`01`–`31`) |
+    /// | `%B` | Full ASCII month name (`"Farvardin"`) |
+    /// | `%b` | Short ASCII month name (`"Far"`) |
+    /// | `%A` | Full ASCII weekday name (`"Shanbeh"`) |
+    /// | `%e` | Day in Persian numerals, unpadded (`"۱"`) |
+    /// | `%%` | Literal `%` |
+    ///
+    /// Unknown specifiers are passed through unchanged.
+    ///
+    /// # Example
+    ///
+    /// ```rust
+    /// # use shahanshahi::ShahanshahiDate;
+    /// let d = ShahanshahiDate::try_new(2535, 1, 1).unwrap();
+    /// assert_eq!(d.format("%d %B %Y"), "01 Farvardin 2535");
+    /// assert_eq!(d.format("%Y/%m/%d"), "2535/01/01");
+    /// ```
+    #[cfg(feature = "std")]
+    pub fn format(&self, fmt: &str) -> String {
+        let weekday = self.weekday();
+        crate::format::format_shahanshahi(self.year, self.month, self.day, weekday, fmt)
+    }
+
     /// Converts this Shahanshahi civil date to the **proleptic Gregorian** anchor calendar (SPEC.md),
     /// using **Rata Die** as the internal scale (see `convert` module).
     ///

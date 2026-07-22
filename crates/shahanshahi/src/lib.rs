@@ -29,6 +29,8 @@
 
 mod convert;
 mod date;
+#[cfg(feature = "std")]
+mod format;
 mod gregorian;
 mod leap;
 mod months;
@@ -43,6 +45,8 @@ pub use chrono_compat::ChronoNaiveDateOutOfRange;
 mod time_compat;
 
 pub use date::{ShahanshahiDate, ShahanshahiDateError};
+#[cfg(feature = "std")]
+pub use format::to_persian_numerals;
 pub use gregorian::{GregorianDate, GregorianDateError};
 pub use leap::{
     is_shahanshahi_leap_arithmetic, is_solar_hijri_leap_arithmetic,
