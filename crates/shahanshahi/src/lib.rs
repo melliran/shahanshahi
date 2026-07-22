@@ -46,7 +46,7 @@ mod time_compat;
 
 pub use date::{ShahanshahiDate, ShahanshahiDateError};
 #[cfg(feature = "std")]
-pub use format::to_persian_numerals;
+pub use format::{to_persian_numerals, Locale};
 pub use gregorian::{GregorianDate, GregorianDateError};
 pub use leap::{
     is_shahanshahi_leap_arithmetic, is_solar_hijri_leap_arithmetic,
