@@ -27,6 +27,8 @@ pub fn to_persian_numerals(s: &str) -> String {
     s.chars().map(ascii_digit_to_persian).collect()
 }
 
+// TODO: when GregorianDate::format() is added, replace the flat params with a shared
+// internal struct or trait rather than duplicating this signature.
 /// Format a Shahanshahi date using a strftime-style format string.
 ///
 /// Recognised specifiers:
