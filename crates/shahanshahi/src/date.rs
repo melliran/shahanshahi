@@ -187,6 +187,54 @@ impl ShahanshahiDate {
         crate::weekday::weekday_from_rata_die(rd)
     }
 
+    /// Formats this date using a strftime-style format string with ASCII romanized names
+    /// and Western digits. Equivalent to `format_localized(fmt, Locale::En)`.
+    ///
+    /// See [`format_localized`](Self::format_localized) for the full specifier table and
+    /// Persian-locale output.
+    ///
+    /// # Example
+    ///
+    /// ```rust
+    /// # use shahanshahi::ShahanshahiDate;
+    /// let d = ShahanshahiDate::try_new(2535, 1, 1).unwrap();
+    /// assert_eq!(d.format("%d %B %Y"), "01 Farvardin 2535");
+    /// assert_eq!(d.format("%Y/%m/%d"), "2535/01/01");
+    /// ```
+    #[cfg(feature = "std")]
+    pub fn format(&self, fmt: &str) -> String {
+        self.format_localized(fmt, crate::Locale::En)
+    }
+
+    /// Formats this date using a strftime-style format string and the given [`Locale`](crate::Locale).
+    ///
+    /// | Specifier | `Locale::En` | `Locale::Fa` |
+    /// |-----------|-------------|-------------|
+    /// | `%Y` | `2535` | `۲۵۳۵` |
+    /// | `%m` | `01` | `۰۱` |
+    /// | `%d` | `01` | `۰۱` |
+    /// | `%B` | `Farvardin` | `فروردین` |
+    /// | `%b` | `Far` | `Far` |
+    /// | `%A` | `Shanbeh` | `شنبه` |
+    /// | `%%` | `%` | `%` |
+    ///
+    /// `Locale::Fa` converts all output digits to Persian numerals (U+06F0–U+06F9).
+    /// Unknown specifiers are passed through unchanged.
+    ///
+    /// # Example
+    ///
+    /// ```rust
+    /// # use shahanshahi::{ShahanshahiDate, Locale};
+    /// let d = ShahanshahiDate::try_new(2535, 1, 1).unwrap();
+    /// assert_eq!(d.format_localized("%d %B %Y", Locale::Fa), "۰۱ فروردین ۲۵۳۵");
+    /// assert_eq!(d.format_localized("%A، %d %B %Y", Locale::Fa), "یکشنبه، ۰۱ فروردین ۲۵۳۵");
+    /// ```
+    #[cfg(feature = "std")]
+    pub fn format_localized(&self, fmt: &str, locale: crate::Locale) -> String {
+        let weekday = self.weekday();
+        crate::format::format_shahanshahi(self.year, self.month, self.day, weekday, fmt, locale)
+    }
+
     /// Converts this Shahanshahi civil date to the **proleptic Gregorian** anchor calendar (SPEC.md),
     /// using **Rata Die** as the internal scale (see `convert` module).
     ///
