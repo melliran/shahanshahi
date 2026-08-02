@@ -24,7 +24,7 @@ clap_complete = "4"
 csv = "1"
 serde = { version = "1", features = ["derive"] }
 serde_json = "1"
-shahanshahi = { path = "../shahanshahi", version = "0.3.0", features = ["proleptic"] }
+shahanshahi = { path = "../shahanshahi", version = "0.4.0", features = ["proleptic"] }
 
 [lints.rust]
 unsafe_code = "forbid"
