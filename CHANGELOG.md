@@ -8,6 +8,12 @@ as described in [`docs/ENGINEERING.md`](./docs/ENGINEERING.md).
 
 ## [Unreleased]
 
+## [0.3.1](https://github.com/melliran/shahanshahi/compare/shahanshahi-v0.3.0...shahanshahi-v0.3.1) - 2026-08-02
+
+### Added
+
+- *(shahanshahi)* add strftime-style format() and to_persian_numerals() ([#117](https://github.com/melliran/shahanshahi/pull/117))
+
 ## [0.3.0] - 2026-07-05
 
 ### Added
