@@ -8,6 +8,15 @@ as described in [`docs/ENGINEERING.md`](./docs/ENGINEERING.md).
 
 ## [Unreleased]
 
+## [0.4.0] - 2026-08-02
+
+### Added
+
+- [`Locale`](./crates/shahanshahi/src/format.rs) enum (`Locale::En`, `Locale::Fa`) — controls whether format output uses ASCII romanized names and Western digits, or Persian script names and Persian numerals (U+06F0–U+06F9) ([#117](https://github.com/melliran/shahanshahi/pull/117))
+- [`ShahanshahiDate::format(fmt)`](./crates/shahanshahi/src/date.rs) — strftime-style formatting with specifiers `%Y`, `%m`, `%d`, `%B` (full month name), `%b` (short month name), `%A` (weekday name), `%%`; defaults to `Locale::En` ([#117](https://github.com/melliran/shahanshahi/pull/117))
+- [`ShahanshahiDate::format_localized(fmt, locale)`](./crates/shahanshahi/src/date.rs) — same as `format()` but accepts a `Locale`; `Locale::Fa` outputs Persian script names and converts all digits to Persian numerals ([#117](https://github.com/melliran/shahanshahi/pull/117))
+- [`to_persian_numerals(s)`](./crates/shahanshahi/src/format.rs) — public utility that replaces every ASCII digit in a string with its Persian numeral equivalent ([#117](https://github.com/melliran/shahanshahi/pull/117))
+
 ## [0.3.0] - 2026-07-05
 
 ### Added
