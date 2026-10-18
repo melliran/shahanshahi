@@ -47,3 +47,42 @@ pub fn shahanshahi_to_gregorian(year: i32, month: u8, day: u8) -> Result<JsValue
 pub fn is_shahanshahi_leap_year(year: i32) -> bool {
     is_shahanshahi_leap_arithmetic(year)
 }
+
+/// Output locale for [`format_shahanshahi_date`]. Exposed to TypeScript as `"en" | "fa"`.
+#[wasm_bindgen]
+#[derive(Clone, Copy)]
+pub enum Locale {
+    /// Romanized names, Western digits.
+    En = "en",
+    /// Persian names and digits.
+    Fa = "fa",
+}
+
+/// Format a Shahanshahi date using a strftime-style format string.
+///
+/// Specifiers: `%Y` `%m` `%d` `%B` `%b` `%A` `%%`; unknown specifiers pass through unchanged.
+/// `locale` defaults to `"en"`. Throws a JS `Error` on an invalid date or unknown locale.
+#[wasm_bindgen(js_name = formatShahanshahiDate)]
+pub fn format_shahanshahi_date(
+    year: i32,
+    month: u8,
+    day: u8,
+    fmt: &str,
+    locale: Option<Locale>,
+) -> Result<String, JsError> {
+    let locale = match locale {
+        None | Some(Locale::En) => shahanshahi::Locale::En,
+        Some(Locale::Fa) => shahanshahi::Locale::Fa,
+        // Unknown strings from JS arrive as wasm-bindgen's hidden invalid variant.
+        Some(_) => return Err(JsError::new("unknown locale (expected \"en\" or \"fa\")")),
+    };
+    let sh =
+        ShahanshahiDate::try_new(year, month, day).map_err(|e| JsError::new(&e.to_string()))?;
+    Ok(sh.format_localized(fmt, locale))
+}
+
+/// Replace every ASCII digit in `s` with its Persian numeral (U+06F0–U+06F9).
+#[wasm_bindgen(js_name = toPersianNumerals)]
+pub fn to_persian_numerals(s: &str) -> String {
+    shahanshahi::to_persian_numerals(s)
+}
