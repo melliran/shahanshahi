@@ -6,12 +6,6 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 **Shahanshahi** is a Rust library and CLI for deterministic offline conversion between the **Shahanshahi (Imperial Iranian) civil calendar** (in use ~1976–1979) and the proleptic Gregorian calendar. Behavior is governed by `SPEC.md` (authoritative, version-pinned) and validated against a vetted golden corpus in `data/reference-dates.json`.
 
-## Workspace Layout
-
-Two crates:
-- `crates/shahanshahi` — the core library (v0.2.0)
-- `crates/shahanshahi-cli` — batch/pipe-friendly CLI binary (v0.1.0)
-
 ## Common Commands
 
 ```bash
@@ -106,14 +100,3 @@ Avoid bundling unrelated edits. Group by one concern per commit: manifest/toolin
 - **Do not** add `Made-with:` trailers, tool-marketing lines, or AI badges anywhere (commits, PRs, docs, README).
 - Never use `--no-verify` unless the maintainer explicitly requests a one-off bypass.
 
-## Calendar algorithm code style (`crates/shahanshahi/**/*.rs`)
-
-- Use **descriptive local variable names** over cryptic single letters in multi-step algorithms.
-- Use `year` / `month` / `day` only for real civil components; name intermediates explicitly (`shifted_month`, `month_packed`, `offset_days`, `rata_die`, …).
-- For ported formulas (e.g. JDN ↔ Gregorian), add a brief comment naming the algorithm family and its phases.
-- Public params may use SPEC abbreviations (`y_h`, `y_s`) if documented on the function.
-- Full rationale: `docs/CALENDAR_CODE_STYLE.md`.
-
-## Versioning & Release
-
-Library and CLI are versioned independently. Releases are automated via [release-plz](https://release-plz.dev/): CI drafts a release PR (version bump + changelog), which is merged manually to trigger `cargo publish`. Library tags: `vX.Y.Z`; CLI tags: `shahanshahi-cli-vX.Y.Z`. See `docs/ENGINEERING.md` for the full release workflow.
