@@ -1,8 +1,10 @@
 # https://release-plz.dev/docs/github/quickstart
-# — release-pr: opens/updates a draft PR (version bump + CHANGELOG) on every push to main.
+# Manual trigger only — nothing runs on push. Start it when you want to cut a release:
+#   gh workflow run release-plz.yml --ref main
+# — release-pr: opens/updates a draft PR (version bump + CHANGELOG).
 # — release: publishes to crates.io + GitHub Release only when explicitly enabled (repo variable).
 #
-# Preferred path: review and merge the bot's draft PR for each release.
+# Preferred path: trigger the workflow, then review and merge the bot's draft PR.
 # If a manual release PR is used instead, close the bot PR (don't merge both).
 # Full guide: docs/ENGINEERING.md → "Release process" → "Day-to-day flow".
 #
@@ -12,9 +14,7 @@
 name: release-plz
 
 on:
-  push:
-    branches:
-      - main
+  workflow_dispatch:
 
 jobs:
   release-plz-pr:
