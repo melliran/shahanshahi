@@ -23,7 +23,7 @@ GitHub Actions run on every push and pull request to `main`:
 | [test](../.github/workflows/test.yml) | `cargo test --workspace --all-features` — tests pass (including `proleptic`). |
 | [crate package](../.github/workflows/crate-package.yml) | `cargo publish -p shahanshahi --dry-run` and `cargo publish -p shahanshahi-cli --dry-run` — each crate **packages and builds** as crates.io would. |
 | [audit](../.github/workflows/audit.yml) | **`cargo audit`** (RustSec) + **`cargo deny check`** (advisories, licenses, sources) on every PR and weekly on a schedule. |
-| [release-plz](../.github/workflows/release-plz.yml) | On push to **`main`**: maintain a **draft release PR** (version + changelog). **Publish** job runs only if repo variable **`RELEASE_PLZ_PUBLISH`** is `true` and **`CARGO_REGISTRY_TOKEN`** is set. |
+| [release-plz](../.github/workflows/release-plz.yml) **Manual trigger only** (`gh workflow run release-plz.yml --ref main`): opens/updates a **draft release PR** (version + changelog). **Publish** job runs only if repo variable **`RELEASE_PLZ_PUBLISH`** is `true` and **`CARGO_REGISTRY_TOKEN`** is set. |
 
 **`Cargo.lock`** is committed at the workspace root so CI and security scans are **deterministic**. Refresh it when dependencies change (`cargo update` as appropriate).
 
@@ -104,16 +104,22 @@ Error from GitHub’s API often looks like:
 
 ### Day-to-day flow
 
-#### Why a bot PR appears
+#### When a bot PR appears
 
-Every push to `main` triggers the **`release-plz-pr`** job. Release-plz compares the latest crates.io version with the commits since that release, infers the next semver bump from Conventional Commit prefixes, and opens (or updates) a **draft** PR on a `release-plz-*` branch with the proposed `Cargo.toml` version and [`CHANGELOG.md`](../CHANGELOG.md) edits for packages listed in [`release-plz.toml`](../release-plz.toml) (today: **`shahanshahi`** only). The PR is labelled `chore`.
+The workflow has **no push trigger** — release PRs are never opened automatically. When you are ready to release, start it by hand:
 
-This is **normal and expected** — the bot PR is a convenience, not a mandate to merge immediately. It stays in draft until a maintainer is ready to release.
+```bash
+gh workflow run release-plz.yml --ref main   # or Actions → release-plz → Run workflow
+```
+
+That runs the **`release-plz-pr`** job. Release-plz compares the latest crates.io version with the commits since that release, infers the next semver bump from Conventional Commit prefixes, and opens (or updates) a **draft** PR on a `release-plz-*` branch with the proposed `Cargo.toml` version and [`CHANGELOG.md`](../CHANGELOG.md) edits for packages listed in [`release-plz.toml`](../release-plz.toml) (today: **`shahanshahi`** only). The PR is labelled `chore`.
+
+The bot PR is a convenience, not a mandate to merge immediately. It stays in draft until a maintainer is ready to release.
 
 #### Preferred path — merge the release-plz draft PR
 
 1. Merge ordinary work to `main` (Conventional Commit–style messages help release-plz infer semver bumps).
-2. **Wait** for release-plz to open or update its draft PR with the proposed version and changelog.
+2. **Trigger** the workflow (see above) and wait for release-plz to open or update its draft PR with the proposed version and changelog.
 3. **Review** that PR: check the version level (patch / minor / major), changelog prose, and spec readiness.
 4. **Edit if needed** — push fixup commits to the bot's branch for changelog wording or version override. Release-plz tolerates manual edits on its branch.
 5. Mark the PR **ready for review** and **merge** when satisfied.
@@ -136,7 +142,7 @@ After merging, release-plz will detect that the version on `main` already matche
 #### Handling duplicate or stale release PRs
 
 - **One release PR at a time.** If a release-plz draft PR and a manual release PR both exist, decide which to use and **close the other** (not merge).
-- If you close a bot PR that is no longer relevant, release-plz will open a fresh one on the next push to `main` if there are new unreleased commits.
+- If you close a bot PR that is no longer relevant, it stays closed — release-plz only opens a fresh one the next time you trigger the workflow.
 - Leaving stale bot PRs open is harmless (they stay in draft) but adds noise — prefer closing them promptly with a short note.
 
 #### Publishing and `RELEASE_PLZ_PUBLISH`
@@ -163,7 +169,7 @@ Tracking checklist: [issue #8](https://github.com/melliran/shahanshahi/issues/8)
 
 **`RELEASE_PLZ_PUBLISH` — do you need to change it for 0.1.0?**
 
-- **Getting ready** (docs, merging feature work, reviewing a draft release-plz PR): **leave the variable unset or not `true`**. Release-plz still opens/updates **draft release PRs**; nothing is published to crates.io automatically.
+- **Getting ready** (docs, merging feature work, reviewing a draft release-plz PR): **leave the variable unset or not `true`**. Triggering release-plz still opens/updates **draft release PRs**; nothing is published to crates.io automatically.
 - **Turn it to `true` only when** you want every successful **`release-plz release`** run on `main` (after you merge the release PR) to **publish to crates.io** and create the GitHub Release **without** a manual `cargo publish`. Prerequisites: valid **`CARGO_REGISTRY_TOKEN`** secret and confidence that automation matches your release policy.
 - **First crates.io publish** is often done **manually** once ([release-plz quickstart](https://release-plz.dev/docs/github/quickstart)); you can keep **`RELEASE_PLZ_PUBLISH`** off until after that, then enable it for later versions if desired.
 
