@@ -1,5 +1,5 @@
 use serde::Serialize;
-use shahanshahi::{is_shahanshahi_leap_arithmetic, GregorianDate, Locale, ShahanshahiDate};
+use shahanshahi::{is_shahanshahi_leap_arithmetic, GregorianDate, ShahanshahiDate};
 use wasm_bindgen::prelude::*;
 
 /// Plain data returned across the JS boundary — serializes to `{ year, month, day }`.
@@ -48,27 +48,33 @@ pub fn is_shahanshahi_leap_year(year: i32) -> bool {
     is_shahanshahi_leap_arithmetic(year)
 }
 
+/// Output locale for [`format_shahanshahi_date`]. Exposed to TypeScript as `"en" | "fa"`.
+#[wasm_bindgen]
+#[derive(Clone, Copy)]
+pub enum Locale {
+    /// Romanized names, Western digits.
+    En = "en",
+    /// Persian names and digits.
+    Fa = "fa",
+}
+
 /// Format a Shahanshahi date using a strftime-style format string.
 ///
 /// Specifiers: `%Y` `%m` `%d` `%B` `%b` `%A` `%%`; unknown specifiers pass through unchanged.
-/// `locale` is `"en"` (default — romanized names, Western digits) or `"fa"` (Persian names
-/// and digits). Throws a JS `Error` on an invalid date or unknown locale.
+/// `locale` defaults to `"en"`. Throws a JS `Error` on an invalid date or unknown locale.
 #[wasm_bindgen(js_name = formatShahanshahiDate)]
 pub fn format_shahanshahi_date(
     year: i32,
     month: u8,
     day: u8,
     fmt: &str,
-    locale: Option<String>,
+    locale: Option<Locale>,
 ) -> Result<String, JsError> {
-    let locale = match locale.as_deref() {
-        None | Some("en") => Locale::En,
-        Some("fa") => Locale::Fa,
-        Some(other) => {
-            return Err(JsError::new(&format!(
-                "unknown locale {other:?} (expected \"en\" or \"fa\")"
-            )))
-        }
+    let locale = match locale {
+        None | Some(Locale::En) => shahanshahi::Locale::En,
+        Some(Locale::Fa) => shahanshahi::Locale::Fa,
+        // Unknown strings from JS arrive as wasm-bindgen's hidden invalid variant.
+        Some(_) => return Err(JsError::new("unknown locale (expected \"en\" or \"fa\")")),
     };
     let sh =
         ShahanshahiDate::try_new(year, month, day).map_err(|e| JsError::new(&e.to_string()))?;

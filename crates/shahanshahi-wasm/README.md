@@ -54,7 +54,7 @@ isShahanshahiLeapYear(2535); // → false
 
 ### `formatShahanshahiDate(year, month, day, fmt, locale?)`
 
-Formats a Shahanshahi date with a strftime-style format string. `locale` is `"en"` (default) or `"fa"`; any other value throws.
+Formats a Shahanshahi date with a strftime-style format string. `locale` is typed as `Locale = "en" | "fa"` and defaults to `"en"`; any other value throws at runtime.
 
 | Specifier | `"en"` | `"fa"` |
 |-----------|--------|--------|

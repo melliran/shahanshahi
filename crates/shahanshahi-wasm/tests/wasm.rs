@@ -1,7 +1,7 @@
 use js_sys::Reflect;
 use shahanshahi_wasm::{
     format_shahanshahi_date, gregorian_to_shahanshahi, is_shahanshahi_leap_year,
-    shahanshahi_to_gregorian, to_persian_numerals,
+    shahanshahi_to_gregorian, to_persian_numerals, Locale,
 };
 use wasm_bindgen::JsValue;
 use wasm_bindgen_test::*;
@@ -67,7 +67,7 @@ fn format_default_locale_is_en() {
 #[wasm_bindgen_test]
 fn format_en_locale() {
     assert_eq!(
-        format_shahanshahi_date(2535, 1, 1, "%A %b %Y/%m/%d", Some("en".into())).unwrap(),
+        format_shahanshahi_date(2535, 1, 1, "%A %b %Y/%m/%d", Some(Locale::En)).unwrap(),
         "Yekshanbeh Far 2535/01/01"
     );
 }
@@ -75,14 +75,9 @@ fn format_en_locale() {
 #[wasm_bindgen_test]
 fn format_fa_locale() {
     assert_eq!(
-        format_shahanshahi_date(2535, 1, 1, "%A، %d %B %Y", Some("fa".into())).unwrap(),
+        format_shahanshahi_date(2535, 1, 1, "%A، %d %B %Y", Some(Locale::Fa)).unwrap(),
         "یکشنبه، ۰۱ فروردین ۲۵۳۵"
     );
-}
-
-#[wasm_bindgen_test]
-fn format_unknown_locale_throws() {
-    assert!(format_shahanshahi_date(2535, 1, 1, "%Y", Some("de".into())).is_err());
 }
 
 #[wasm_bindgen_test]

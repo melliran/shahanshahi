@@ -9,7 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- `formatShahanshahiDate(year, month, day, fmt, locale?)` — strftime-style formatting (`%Y` `%m` `%d` `%B` `%b` `%A` `%%`) with optional `"en"` / `"fa"` locale ([#118](https://github.com/melliran/shahanshahi/issues/118))
+- `formatShahanshahiDate(year, month, day, fmt, locale?)` — strftime-style formatting (`%Y` `%m` `%d` `%B` `%b` `%A` `%%`) with optional `locale` (TypeScript type `Locale = "en" | "fa"`) ([#118](https://github.com/melliran/shahanshahi/issues/118))
 - `toPersianNumerals(s)` — converts ASCII digits to Persian numerals ([#118](https://github.com/melliran/shahanshahi/issues/118))
 
 ## [0.1.2] - 2026-08-02
