@@ -1,6 +1,7 @@
 use js_sys::Reflect;
 use shahanshahi_wasm::{
-    gregorian_to_shahanshahi, is_shahanshahi_leap_year, shahanshahi_to_gregorian,
+    format_shahanshahi_date, gregorian_to_shahanshahi, is_shahanshahi_leap_year,
+    shahanshahi_to_gregorian, to_persian_numerals,
 };
 use wasm_bindgen::JsValue;
 use wasm_bindgen_test::*;
@@ -53,4 +54,44 @@ fn invalid_gregorian_month_throws() {
 #[wasm_bindgen_test]
 fn invalid_shahanshahi_month_throws() {
     assert!(shahanshahi_to_gregorian(2535, 13, 1).is_err());
+}
+
+#[wasm_bindgen_test]
+fn format_default_locale_is_en() {
+    assert_eq!(
+        format_shahanshahi_date(2535, 1, 1, "%d %B %Y", None).unwrap(),
+        "01 Farvardin 2535"
+    );
+}
+
+#[wasm_bindgen_test]
+fn format_en_locale() {
+    assert_eq!(
+        format_shahanshahi_date(2535, 1, 1, "%A %b %Y/%m/%d", Some("en".into())).unwrap(),
+        "Yekshanbeh Far 2535/01/01"
+    );
+}
+
+#[wasm_bindgen_test]
+fn format_fa_locale() {
+    assert_eq!(
+        format_shahanshahi_date(2535, 1, 1, "%A، %d %B %Y", Some("fa".into())).unwrap(),
+        "یکشنبه، ۰۱ فروردین ۲۵۳۵"
+    );
+}
+
+#[wasm_bindgen_test]
+fn format_unknown_locale_throws() {
+    assert!(format_shahanshahi_date(2535, 1, 1, "%Y", Some("de".into())).is_err());
+}
+
+#[wasm_bindgen_test]
+fn format_invalid_date_throws() {
+    assert!(format_shahanshahi_date(2535, 13, 1, "%Y", None).is_err());
+}
+
+#[wasm_bindgen_test]
+fn persian_numerals() {
+    assert_eq!(to_persian_numerals("2535/01/01"), "۲۵۳۵/۰۱/۰۱");
+    assert_eq!(to_persian_numerals("Far 9"), "Far ۹");
 }
