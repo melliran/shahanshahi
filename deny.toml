@@ -7,6 +7,12 @@ all-features = true
 [advisories]
 version = 2
 yanked = "warn"
+ignore = [
+    # chrono is unmaintained (no fixed version exists). It is only pulled in by
+    # the optional `chrono` interop feature; core conversion does not use it.
+    # Revisit when deprecating that feature in favor of `jiff`/`time`.
+    { id = "RUSTSEC-2026-0543", reason = "chrono is optional interop only; no maintained release available" },
+]
 
 [licenses]
 version = 2
