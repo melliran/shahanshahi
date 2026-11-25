@@ -25,7 +25,7 @@ fn shahanshahi_year_length_days(year: i32) -> i32 {
 ///
 /// Counts whole civil days after the anchor’s Farvardin 1: walk year-by-year using Mode A year
 /// lengths, then add completed months in the target year, then `day - 1` within the target month.
-fn offset_from_anchor(year: i32, month: u8, day: u8) -> i64 {
+pub(crate) fn offset_from_anchor(year: i32, month: u8, day: u8) -> i64 {
     let mut cursor_year = ANCHOR_SH_YEAR;
     let mut offset_days = 0i64;
     while cursor_year != year {
@@ -46,7 +46,7 @@ fn offset_from_anchor(year: i32, month: u8, day: u8) -> i64 {
 /// Map “days after 1 Farvardin of the anchor year” (may be negative) to Shahanshahi YMD.
 ///
 /// Normalizes the offset into `[0, year_length)`, then consumes whole months in civil order.
-fn shahanshahi_ymd_from_offset(mut offset_days: i64) -> (i32, u8, u8) {
+pub(crate) fn shahanshahi_ymd_from_offset(mut offset_days: i64) -> (i32, u8, u8) {
     let mut year = ANCHOR_SH_YEAR;
     while offset_days < 0 {
         year -= 1;
