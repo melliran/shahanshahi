@@ -52,6 +52,41 @@ isShahanshahiLeapYear(2534); // → true
 isShahanshahiLeapYear(2535); // → false
 ```
 
+### `formatShahanshahiDate(year, month, day, fmt, locale?)`
+
+Formats a Shahanshahi date with a strftime-style format string. `locale` is typed as `Locale = "en" | "fa"` and defaults to `"en"`; any other value throws at runtime.
+
+| Specifier | `"en"` | `"fa"` |
+|-----------|--------|--------|
+| `%Y` | `2535` | `۲۵۳۵` |
+| `%m` | `01` | `۰۱` |
+| `%d` | `01` | `۰۱` |
+| `%B` | `Farvardin` | `فروردین` |
+| `%b` | `Far` | `Far` |
+| `%A` | `Yekshanbeh` | `یکشنبه` |
+| `%%` | `%` | `%` |
+
+Unknown specifiers pass through unchanged.
+
+```js
+import init, { formatShahanshahiDate } from '@melliran/shahanshahi-wasm';
+await init();
+
+formatShahanshahiDate(2535, 1, 1, '%d %B %Y');             // → "01 Farvardin 2535"
+formatShahanshahiDate(2535, 1, 1, '%A، %d %B %Y', 'fa');   // → "یکشنبه، ۰۱ فروردین ۲۵۳۵"
+```
+
+### `toPersianNumerals(s)`
+
+Replaces every ASCII digit in a string with its Persian numeral (U+06F0–U+06F9).
+
+```js
+import init, { toPersianNumerals } from '@melliran/shahanshahi-wasm';
+await init();
+
+toPersianNumerals('2535/01/01'); // → "۲۵۳۵/۰۱/۰۱"
+```
+
 ### Error handling
 
 ```js
