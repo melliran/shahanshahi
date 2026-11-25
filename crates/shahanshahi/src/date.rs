@@ -235,6 +235,110 @@ impl ShahanshahiDate {
         crate::format::format_shahanshahi(self.year, self.month, self.day, weekday, fmt, locale)
     }
 
+    /// Returns the date `days` civil days after this one, or `None` if the result falls outside the
+    /// default **legal Shahanshahi civil era** (same window as [`try_new`](Self::try_new)).
+    ///
+    /// `days` may be negative (moves backwards). Arithmetic runs on the same anchor day count as
+    /// conversion, so there is no round-trip through Gregorian.
+    ///
+    /// The era check applies to the **result**. A date built with `try_new_proleptic` that is
+    /// already outside the era gets `None`, even for `days == 0`; use
+    /// `checked_add_days_proleptic` (Cargo feature **`proleptic`**) for such dates.
+    ///
+    /// # Example
+    ///
+    /// ```rust
+    /// # use shahanshahi::ShahanshahiDate;
+    /// let d = ShahanshahiDate::try_new(2535, 6, 31).unwrap();
+    /// assert_eq!(d.checked_add_days(1), ShahanshahiDate::try_new(2535, 7, 1).ok());
+    /// assert_eq!(d.checked_add_days(-31), ShahanshahiDate::try_new(2535, 5, 31).ok());
+    ///
+    /// // Past the last day of the legal era (10 Shahrivar 2537).
+    /// let last = ShahanshahiDate::try_new(2537, 6, 10).unwrap();
+    /// assert_eq!(last.checked_add_days(1), None);
+    /// ```
+    pub fn checked_add_days(self, days: i32) -> Option<Self> {
+        self.shift_within_legal_era(i64::from(days))
+    }
+
+    /// Returns the date `days` civil days before this one, or `None` if the result falls outside
+    /// the default **legal Shahanshahi civil era**.
+    ///
+    /// Equivalent to [`checked_add_days`](Self::checked_add_days) with `-days`; negative `days`
+    /// moves forwards. The same era caveat applies.
+    ///
+    /// # Example
+    ///
+    /// ```rust
+    /// # use shahanshahi::ShahanshahiDate;
+    /// let d = ShahanshahiDate::try_new(2536, 1, 1).unwrap();
+    /// assert_eq!(d.checked_sub_days(1), ShahanshahiDate::try_new(2535, 12, 29).ok());
+    ///
+    /// // Before the first day of the legal era (1 Farvardin 2535).
+    /// let first = ShahanshahiDate::try_new(2535, 1, 1).unwrap();
+    /// assert_eq!(first.checked_sub_days(1), None);
+    /// ```
+    pub fn checked_sub_days(self, days: i32) -> Option<Self> {
+        self.shift_within_legal_era(-i64::from(days))
+    }
+
+    /// Like [`checked_add_days`](Self::checked_add_days), but does not enforce the legal era: the
+    /// result only has to fit the 1925 month grid and Mode A leap rule (SPEC.md § Proleptic use).
+    ///
+    /// Currently always returns `Some`; the `Option` leaves room to report year overflow.
+    ///
+    /// Enable Cargo feature **`proleptic`**.
+    ///
+    /// # Panics
+    ///
+    /// Like [`to_gregorian`](Self::to_gregorian), the calendar walk is linear in the number of
+    /// years between 2535 and the dates involved. A result whose year does not fit in `i32` is
+    /// unsupported: it panics on overflow in debug builds.
+    #[cfg(feature = "proleptic")]
+    pub fn checked_add_days_proleptic(self, days: i32) -> Option<Self> {
+        self.shift_proleptic(i64::from(days))
+    }
+
+    /// Like [`checked_sub_days`](Self::checked_sub_days), but does not enforce the legal era.
+    ///
+    /// Currently always returns `Some`. Enable Cargo feature **`proleptic`**.
+    ///
+    /// # Panics
+    ///
+    /// Same as [`checked_add_days_proleptic`](Self::checked_add_days_proleptic).
+    #[cfg(feature = "proleptic")]
+    pub fn checked_sub_days_proleptic(self, days: i32) -> Option<Self> {
+        self.shift_proleptic(-i64::from(days))
+    }
+
+    /// Day offset of the shifted date from the conversion anchor (1 Farvardin 2535).
+    fn shifted_offset(self, days: i64) -> i64 {
+        convert::offset_from_anchor(self.year, self.month, self.day) + days
+    }
+
+    fn shift_within_legal_era(self, days: i64) -> Option<Self> {
+        let target_offset = self.shifted_offset(days);
+        let era_start = convert::offset_from_anchor(
+            LEGAL_ERA_START_YEAR,
+            LEGAL_ERA_START_MONTH,
+            LEGAL_ERA_START_DAY,
+        );
+        let era_end =
+            convert::offset_from_anchor(LEGAL_ERA_END_YEAR, LEGAL_ERA_END_MONTH, LEGAL_ERA_END_DAY);
+        // Reject early so large `days` never walk the calendar far outside the era.
+        if !(era_start..=era_end).contains(&target_offset) {
+            return None;
+        }
+        let (year, month, day) = convert::shahanshahi_ymd_from_offset(target_offset);
+        Self::try_new(year, month, day).ok()
+    }
+
+    #[cfg(feature = "proleptic")]
+    fn shift_proleptic(self, days: i64) -> Option<Self> {
+        let (year, month, day) = convert::shahanshahi_ymd_from_offset(self.shifted_offset(days));
+        Self::try_new_proleptic(year, month, day).ok()
+    }
+
     /// Converts this Shahanshahi civil date to the **proleptic Gregorian** anchor calendar (SPEC.md),
     /// using **Rata Die** as the internal scale (see `convert` module).
     ///
@@ -375,6 +479,102 @@ mod tests {
         let a = ShahanshahiDate::try_new(2535, 1, 1).unwrap();
         let b = ShahanshahiDate::try_new(2535, 12, 29).unwrap();
         assert!(a < b);
+    }
+
+    fn sh(year: i32, month: u8, day: u8) -> ShahanshahiDate {
+        ShahanshahiDate::try_new(year, month, day).unwrap()
+    }
+
+    #[test]
+    fn add_days_zero_is_identity() {
+        assert_eq!(sh(2536, 4, 15).checked_add_days(0), Some(sh(2536, 4, 15)));
+        assert_eq!(sh(2536, 4, 15).checked_sub_days(0), Some(sh(2536, 4, 15)));
+    }
+
+    #[test]
+    fn add_days_rolls_31_day_month_into_30_day_month() {
+        // Shahrivar (31 days) → Mehr (30 days).
+        assert_eq!(sh(2535, 6, 31).checked_add_days(1), Some(sh(2535, 7, 1)));
+        assert_eq!(sh(2535, 7, 1).checked_sub_days(1), Some(sh(2535, 6, 31)));
+    }
+
+    #[test]
+    fn add_days_rolls_common_esfand_into_next_year() {
+        // 2535 is common (Y_H 1355): Esfand has 29 days.
+        assert_eq!(sh(2535, 12, 29).checked_add_days(1), Some(sh(2536, 1, 1)));
+        assert_eq!(sh(2536, 1, 1).checked_sub_days(1), Some(sh(2535, 12, 29)));
+    }
+
+    #[test]
+    fn add_days_negative_moves_backwards() {
+        assert_eq!(sh(2536, 1, 1).checked_add_days(-1), Some(sh(2535, 12, 29)));
+        assert_eq!(sh(2535, 12, 29).checked_sub_days(-1), Some(sh(2536, 1, 1)));
+    }
+
+    #[test]
+    fn add_days_whole_common_year() {
+        assert_eq!(sh(2535, 1, 1).checked_add_days(365), Some(sh(2536, 1, 1)));
+    }
+
+    #[test]
+    fn add_days_rejects_results_outside_legal_era() {
+        assert_eq!(sh(2537, 6, 10).checked_add_days(1), None);
+        assert_eq!(sh(2535, 1, 1).checked_sub_days(1), None);
+        assert_eq!(sh(2535, 1, 1).checked_add_days(-1), None);
+        // Era is ~890 days: span it end to end, then overshoot by one.
+        let span = 365 + 365 + 31 * 5 + 9;
+        assert_eq!(sh(2535, 1, 1).checked_add_days(span), Some(sh(2537, 6, 10)));
+        assert_eq!(sh(2535, 1, 1).checked_add_days(span + 1), None);
+    }
+
+    #[test]
+    fn add_days_extreme_counts_return_none() {
+        assert_eq!(sh(2536, 1, 1).checked_add_days(i32::MAX), None);
+        assert_eq!(sh(2536, 1, 1).checked_add_days(i32::MIN), None);
+        assert_eq!(sh(2536, 1, 1).checked_sub_days(i32::MIN), None);
+    }
+
+    #[cfg(feature = "proleptic")]
+    #[test]
+    fn add_days_era_checked_rejects_proleptic_start_even_for_zero() {
+        let before_era = ShahanshahiDate::try_new_proleptic(2534, 6, 1).unwrap();
+        assert_eq!(before_era.checked_add_days(0), None);
+    }
+
+    #[cfg(feature = "proleptic")]
+    #[test]
+    fn add_days_proleptic_crosses_leap_esfand() {
+        // 2534 is leap (Y_H 1354 ≡ 1 mod 33): Esfand has 30 days.
+        let esfand_29 = ShahanshahiDate::try_new_proleptic(2534, 12, 29).unwrap();
+        let esfand_30 = ShahanshahiDate::try_new_proleptic(2534, 12, 30).unwrap();
+        assert_eq!(esfand_29.checked_add_days_proleptic(1), Some(esfand_30));
+        assert_eq!(
+            esfand_29.checked_add_days_proleptic(2),
+            Some(sh(2535, 1, 1))
+        );
+        assert_eq!(
+            sh(2535, 1, 1).checked_sub_days_proleptic(1),
+            Some(esfand_30)
+        );
+        let leap_year_start = ShahanshahiDate::try_new_proleptic(2534, 1, 1).unwrap();
+        assert_eq!(
+            leap_year_start.checked_add_days_proleptic(366),
+            Some(sh(2535, 1, 1))
+        );
+    }
+
+    #[cfg(feature = "proleptic")]
+    #[test]
+    fn add_days_proleptic_leaves_legal_era() {
+        let after_era = ShahanshahiDate::try_new_proleptic(2537, 6, 11).unwrap();
+        assert_eq!(
+            sh(2537, 6, 10).checked_add_days_proleptic(1),
+            Some(after_era)
+        );
+        assert_eq!(
+            after_era.checked_sub_days_proleptic(1),
+            Some(sh(2537, 6, 10))
+        );
     }
 
     #[test]
