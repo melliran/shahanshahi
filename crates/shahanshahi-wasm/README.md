@@ -10,12 +10,21 @@ Built with [`wasm-bindgen`](https://github.com/rustwasm/wasm-bindgen) and [`wasm
 npm install @melliran/shahanshahi-wasm
 ```
 
+The npm package is built for bundlers (webpack, Vite, and similar): the WebAssembly module is loaded when you import the package, so there is no `init()` to call. All examples below assume this build.
+
 Or build from source (run from the workspace root):
 
 ```bash
 wasm-pack build --scope melliran --target web     crates/shahanshahi-wasm  # ESM / browser
 wasm-pack build --scope melliran --target bundler crates/shahanshahi-wasm  # webpack / vite
 wasm-pack build --scope melliran --target nodejs  crates/shahanshahi-wasm  # Node.js
+```
+
+A `--target web` build exports a default `init` function that you must await once before calling any other function:
+
+```js
+import init, { gregorianToShahanshahi } from './pkg/shahanshahi_wasm.js';
+await init();
 ```
 
 ## API
@@ -25,8 +34,7 @@ All functions are synchronous. Invalid input throws a JavaScript `Error`.
 ### `gregorianToShahanshahi(year, month, day)`
 
 ```js
-import init, { gregorianToShahanshahi } from '@melliran/shahanshahi-wasm';
-await init();
+import { gregorianToShahanshahi } from '@melliran/shahanshahi-wasm';
 
 gregorianToShahanshahi(1976, 3, 21);
 // → { year: 2535, month: 1, day: 1 }
@@ -35,8 +43,7 @@ gregorianToShahanshahi(1976, 3, 21);
 ### `shahanshahiToGregorian(year, month, day)`
 
 ```js
-import init, { shahanshahiToGregorian } from '@melliran/shahanshahi-wasm';
-await init();
+import { shahanshahiToGregorian } from '@melliran/shahanshahi-wasm';
 
 shahanshahiToGregorian(2535, 1, 1);
 // → { year: 1976, month: 3, day: 21 }
@@ -45,8 +52,7 @@ shahanshahiToGregorian(2535, 1, 1);
 ### `isShahanshahiLeapYear(year)`
 
 ```js
-import init, { isShahanshahiLeapYear } from '@melliran/shahanshahi-wasm';
-await init();
+import { isShahanshahiLeapYear } from '@melliran/shahanshahi-wasm';
 
 isShahanshahiLeapYear(2534); // → true
 isShahanshahiLeapYear(2535); // → false
@@ -69,8 +75,7 @@ Formats a Shahanshahi date with a strftime-style format string. `locale` is type
 Unknown specifiers pass through unchanged.
 
 ```js
-import init, { formatShahanshahiDate } from '@melliran/shahanshahi-wasm';
-await init();
+import { formatShahanshahiDate } from '@melliran/shahanshahi-wasm';
 
 formatShahanshahiDate(2535, 1, 1, '%d %B %Y');             // → "01 Farvardin 2535"
 formatShahanshahiDate(2535, 1, 1, '%A، %d %B %Y', 'fa');   // → "یکشنبه، ۰۱ فروردین ۲۵۳۵"
@@ -81,8 +86,7 @@ formatShahanshahiDate(2535, 1, 1, '%A، %d %B %Y', 'fa');   // → "یکشنبه
 Replaces every ASCII digit in a string with its Persian numeral (U+06F0–U+06F9).
 
 ```js
-import init, { toPersianNumerals } from '@melliran/shahanshahi-wasm';
-await init();
+import { toPersianNumerals } from '@melliran/shahanshahi-wasm';
 
 toPersianNumerals('2535/01/01'); // → "۲۵۳۵/۰۱/۰۱"
 ```
@@ -90,8 +94,7 @@ toPersianNumerals('2535/01/01'); // → "۲۵۳۵/۰۱/۰۱"
 ### Error handling
 
 ```js
-import init, { gregorianToShahanshahi } from '@melliran/shahanshahi-wasm';
-await init();
+import { gregorianToShahanshahi } from '@melliran/shahanshahi-wasm';
 
 try {
   gregorianToShahanshahi(1976, 13, 1); // month 13 is invalid
